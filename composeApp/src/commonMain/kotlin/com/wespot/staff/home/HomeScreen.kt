@@ -1,5 +1,7 @@
 package com.wespot.staff.home
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -35,12 +38,21 @@ fun HomeScreen(
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
+    val interactionSource = remember { MutableInteractionSource() }
 
     val state = viewModel.uiState.collectAsStateWithLifecycle().value
 
     Scaffold(
         backgroundColor = WeSpotThemeManager.colors.backgroundColor,
-        modifier = Modifier.fillMaxSize()
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        modifier = Modifier
+            .fillMaxSize()
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null
+            ) {
+                viewModel.clearQuestionClickedState()
+            }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -58,12 +70,19 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.weight(1f),
             ) {
-               items(state.questionList) { item ->
+                items(state.questionList) { item ->
                    WSListItem(
                        title = item.content,
                        subTitle = item.toTimeDescription(),
                        selected = state.clickedQuestion.id == item.id,
-                       onClick = { viewModel.setQuestionClickedState(item) }
+                       onClick = {
+                           // 선택된 아이템을 다시 누르는 경우, 선택 해제
+                           if (state.clickedQuestion.id == item.id) {
+                               viewModel.clearQuestionClickedState()
+                           } else {
+                               viewModel.setQuestionClickedState(item)
+                           }
+                       }
                    )
                }
             }
@@ -75,9 +94,17 @@ fun HomeScreen(
                 textFieldType = WsTextFieldType.Normal,
             )
 
+            // 선택된 아이템이 존재하는 경우, 수정 상태로 간주하여 수정으로 처리한다.
+            val isEditState = state.questionList.any { it.id == state.clickedQuestion.id }
             WSButton(
-                onClick = { viewModel.postVoteQuestion() },
-                text = "질문 추가하기",
+                onClick = {
+                    if (isEditState) {
+                        viewModel.editVoteQuestion()
+                    } else {
+                        viewModel.postVoteQuestion()
+                    }
+                },
+                text = if (isEditState) "질문 수정하기" else "질문 추가하기",
                 paddingValues = PaddingValues(),
                 content = { it() },
             )
@@ -98,6 +125,7 @@ fun HomeScreen(
                         }
 
                         is HomeUiEvent.QuestionLoadFailedEvent -> {
+                            snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
                         }
                     }
                 }

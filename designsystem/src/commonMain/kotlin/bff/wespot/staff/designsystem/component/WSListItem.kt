@@ -57,7 +57,7 @@ fun WSListItem(
 
             Text(
                 text = subTitle,
-                style = StaticTypography().body2,
+                style = StaticTypography().body5,
                 color = WeSpotThemeManager.colors.txtSubColor,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,

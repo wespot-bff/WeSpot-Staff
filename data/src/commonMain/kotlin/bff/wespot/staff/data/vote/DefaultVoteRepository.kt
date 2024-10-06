@@ -11,7 +11,7 @@ public class DefaultVoteRepository(
 ): VoteRepository {
     override suspend fun getVoteQuestions(): Result<List<VoteQuestion>> =
         voteApi.getVoteQuestions().mapCatching {
-            it.map { list ->
+            it.voteOptions.map { list ->
                 list.toVoteQuestion()
             }
         }
@@ -19,6 +19,6 @@ public class DefaultVoteRepository(
     override suspend fun postVoteQuestion(question: VoteQuestionContent): Result<Unit> =
         voteApi.postVoteQuestion(VoteQuestionRequest(question))
 
-    override suspend fun editVoteQuestion(id: Int, question: VoteQuestionContent): Result<Unit> =
+    override suspend fun editVoteQuestion(id: Long, question: VoteQuestionContent): Result<Unit> =
         voteApi.editVoteQuestion(id, question = VoteQuestionRequest(question))
 }

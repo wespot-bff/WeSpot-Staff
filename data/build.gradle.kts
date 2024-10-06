@@ -11,7 +11,7 @@ val properties = Properties()
 properties.load(rootProject.file("local.properties").inputStream())
 
 buildConfig {
-    buildConfigField("BASE_URL", properties.getProperty("BASE_URL"))
+    buildConfigField<String>("BASE_URL", properties.getProperty("BASE_URL"))
 }
 
 kotlin {
