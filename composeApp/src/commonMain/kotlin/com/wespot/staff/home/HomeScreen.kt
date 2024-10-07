@@ -1,5 +1,11 @@
 package com.wespot.staff.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -9,15 +15,18 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
-import androidx.compose.material.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -25,13 +34,17 @@ import androidx.lifecycle.repeatOnLifecycle
 import bff.wespot.staff.designsystem.component.WSButton
 import bff.wespot.staff.designsystem.component.WSListItem
 import bff.wespot.staff.designsystem.component.WSTextField
+import bff.wespot.staff.designsystem.component.WSTopBar
 import bff.wespot.staff.designsystem.component.WsTextFieldType
-import bff.wespot.staff.designsystem.theme.StaticTypography
 import bff.wespot.staff.designsystem.theme.WeSpotThemeManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
+import wespotstaff.composeapp.generated.resources.Res
+import wespotstaff.composeapp.generated.resources.search
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
@@ -45,6 +58,23 @@ fun HomeScreen(
     Scaffold(
         backgroundColor = WeSpotThemeManager.colors.backgroundColor,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        topBar = {
+            WSTopBar(
+                title = "WeSpot Staff",
+                action = {
+                    IconButton(
+                        modifier = Modifier.padding(end = 8.dp),
+                        onClick = { viewModel.toggleSearchState() },
+                    ) {
+                        Icon(
+                            painter = painterResource(Res.drawable.search),
+                            contentDescription = "search_icon",
+                            tint = WeSpotThemeManager.colors.txtTitleColor,
+                        )
+                    }
+                }
+            )
+        },
         modifier = Modifier
             .fillMaxSize()
             .clickable(
@@ -52,7 +82,7 @@ fun HomeScreen(
                 indication = null
             ) {
                 viewModel.clearQuestionClickedState()
-            }
+            },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -60,11 +90,19 @@ fun HomeScreen(
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Text(
-                text = "WeSpot Staff",
-                style = StaticTypography().header1,
-                color = WeSpotThemeManager.colors.txtTitleColor,
-            )
+            AnimatedVisibility(
+                visible = state.isSearchState,
+                enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(),
+                exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(),
+                modifier = Modifier.zIndex(99f)
+            ) {
+                WSTextField(
+                    value = state.searchInput,
+                    onValueChange = viewModel::setSearchInput,
+                    placeholder = "질문을 검색하세요",
+                    textFieldType = WsTextFieldType.Search,
+                )
+            }
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -113,9 +151,10 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         viewModel.getVoteQuestionList()
+        viewModel.observeSearchInput()
     }
 
-    LaunchedEffect(viewModel.uiEvent) {
+    LaunchedEffect(viewModel.uiEvent, lifecycleOwner) {
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             withContext(Dispatchers.Main.immediate) {
                 viewModel.uiEvent.collect {

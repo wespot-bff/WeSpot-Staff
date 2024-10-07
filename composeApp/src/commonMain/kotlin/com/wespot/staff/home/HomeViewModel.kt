@@ -5,9 +5,12 @@ import androidx.lifecycle.viewModelScope
 import bff.wespot.staff.domain.vote.VoteQuestion
 import bff.wespot.staff.domain.vote.VoteRepository
 import co.touchlab.kermit.Logger
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -18,6 +21,9 @@ class HomeViewModel(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val searchInput: MutableStateFlow<String> = MutableStateFlow("")
+    private var wholeQuestionList: List<VoteQuestion> = listOf()
+
     private val _uiEvent = Channel<HomeUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -25,6 +31,7 @@ class HomeViewModel(
         viewModelScope.launch {
             voteRepository.getVoteQuestions()
                 .onSuccess { questions ->
+                    wholeQuestionList = questions
                     _uiState.update { it.copy(questionList = questions) }
                 }
                 .onFailure {
@@ -54,6 +61,35 @@ class HomeViewModel(
                 questionInput = "",
             )
         }
+    }
+
+    fun setSearchInput(keyword: String) {
+        searchInput.value = keyword
+        _uiState.update { it.copy(searchInput = keyword) }
+    }
+
+    fun observeSearchInput() {
+        viewModelScope.launch(Dispatchers.Default) {
+            searchInput
+                .debounce(500)
+                .distinctUntilChanged()
+                .collect { keyword ->
+                    if (_uiState.value.isSearchState) {
+                        val list = wholeQuestionList.filter { keyword in it.content }
+                        _uiState.update { it.copy(questionList = list) }
+                    }
+                }
+        }
+    }
+
+    fun toggleSearchState() {
+        val previousState = _uiState.value.isSearchState
+        if (previousState) {
+            setSearchInput("")
+            _uiState.update { it.copy(questionList = wholeQuestionList) }
+        }
+
+        _uiState.update { it.copy(isSearchState = previousState.not()) }
     }
 
     fun editVoteQuestion() {

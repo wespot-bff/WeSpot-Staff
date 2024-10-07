@@ -6,4 +6,6 @@ data class HomeUiState (
     val questionInput: String = "",
     val questionList: List<VoteQuestion> = listOf(),
     val clickedQuestion: VoteQuestion = VoteQuestion(),
+    val searchInput: String = "",
+    val isSearchState: Boolean = false,
 )
