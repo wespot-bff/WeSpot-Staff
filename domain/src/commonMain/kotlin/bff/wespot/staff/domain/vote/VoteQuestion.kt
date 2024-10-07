@@ -1,5 +1,6 @@
 package bff.wespot.staff.domain.vote
 
+import bff.wespot.staff.domain.common.toDescription
 import kotlinx.datetime.LocalDateTime
 
 data class VoteQuestion(
@@ -10,6 +11,11 @@ data class VoteQuestion(
 ) {
     constructor(): this(-1, "", LocalDateTime(2001, 5, 8, 0, 0), null)
 
-    fun toTimeDescription(): String =
-        updatedAt?.let { "마지막 질문 수정 시간 $it" } ?: "질문 생성 시간 $createdAt"
+    fun toTimeDescription(): String {
+        return if (updatedAt != null) {
+            "마지막 질문 수정 시간 ${updatedAt.toDescription()}"
+        } else {
+            "질문 생성 시간 ${createdAt.toDescription()}"
+        }
+    }
 }

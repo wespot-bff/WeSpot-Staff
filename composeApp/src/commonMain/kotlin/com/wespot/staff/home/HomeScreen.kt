@@ -27,18 +27,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
+import bff.wespot.staff.common.collectEvent
 import bff.wespot.staff.designsystem.component.WSButton
 import bff.wespot.staff.designsystem.component.WSListItem
 import bff.wespot.staff.designsystem.component.WSTextField
 import bff.wespot.staff.designsystem.component.WSTopBar
 import bff.wespot.staff.designsystem.component.WsTextFieldType
 import bff.wespot.staff.designsystem.theme.WeSpotThemeManager
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import wespotstaff.composeapp.generated.resources.Res
@@ -108,7 +105,10 @@ fun HomeScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 modifier = Modifier.weight(1f),
             ) {
-                items(state.questionList) { item ->
+                items(
+                    items = state.questionList,
+                    key = { it.id }
+                ) { item ->
                    WSListItem(
                        title = item.content,
                        subTitle = item.toTimeDescription(),
@@ -154,20 +154,14 @@ fun HomeScreen(
         viewModel.observeSearchInput()
     }
 
-    LaunchedEffect(viewModel.uiEvent, lifecycleOwner) {
-        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-            withContext(Dispatchers.Main.immediate) {
-                viewModel.uiEvent.collect {
-                    when (it) {
-                        is HomeUiEvent.QuestionPostEvent -> {
-                            snackbarHostState.showSnackbar(message = it.message)
-                        }
+    viewModel.uiEvent.collectEvent {
+        when (it) {
+            is HomeUiEvent.QuestionPostEvent -> {
+                snackbarHostState.showSnackbar(message = it.message)
+            }
 
-                        is HomeUiEvent.QuestionLoadFailedEvent -> {
-                            snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
-                        }
-                    }
-                }
+            is HomeUiEvent.QuestionLoadFailedEvent -> {
+                snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
             }
         }
     }
