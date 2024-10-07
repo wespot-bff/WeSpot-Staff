@@ -28,6 +28,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(compose.runtime)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.androidx.lifecycle.runtime.compose)
         }
     }
 }
