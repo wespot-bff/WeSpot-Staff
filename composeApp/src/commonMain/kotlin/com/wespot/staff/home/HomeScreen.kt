@@ -9,6 +9,7 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,7 +28,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import bff.wespot.staff.common.collectEvent
 import bff.wespot.staff.designsystem.component.WSButton
@@ -46,7 +46,6 @@ import wespotstaff.composeapp.generated.resources.search
 fun HomeScreen(
     viewModel: HomeViewModel = koinViewModel()
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
     val snackbarHostState = remember { SnackbarHostState() }
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -84,21 +83,23 @@ fun HomeScreen(
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             AnimatedVisibility(
                 visible = state.isSearchState,
                 enter = expandVertically(animationSpec = tween(durationMillis = 300)) + fadeIn(),
                 exit = shrinkVertically(animationSpec = tween(durationMillis = 300)) + fadeOut(),
-                modifier = Modifier.zIndex(99f)
+                modifier = Modifier.zIndex(99f),
             ) {
-                WSTextField(
-                    value = state.searchInput,
-                    onValueChange = viewModel::setSearchInput,
-                    placeholder = "질문을 검색하세요",
-                    textFieldType = WsTextFieldType.Search,
-                )
+                Box(modifier = Modifier.padding(bottom = 20.dp)) {
+                    WSTextField(
+                        value = state.searchInput,
+                        onValueChange = viewModel::setSearchInput,
+                        placeholder = "질문을 검색하세요",
+                        textFieldType = WsTextFieldType.Search,
+                    )
+                }
             }
 
             LazyColumn(
