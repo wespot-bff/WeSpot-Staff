@@ -2,8 +2,8 @@ package com.wespot.staff.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import bff.wespot.staff.domain.vote.VoteQuestion
-import bff.wespot.staff.domain.vote.VoteRepository
+import com.wespot.staff.domain.vote.VoteQuestion
+import com.wespot.staff.domain.vote.VoteRepository
 import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel

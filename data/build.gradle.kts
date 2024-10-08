@@ -58,7 +58,7 @@ kotlin {
 }
 
 android {
-    namespace = "bff.wespot.staff.data"
+    namespace = "com.wespot.staff.data"
     compileSdk = 34
     defaultConfig {
         minSdk = 26

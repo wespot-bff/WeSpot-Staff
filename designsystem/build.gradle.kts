@@ -40,7 +40,7 @@ kotlin {
 }
 
 android {
-    namespace = "bff.wespot.staff.designsystem"
+    namespace = "com.wespot.staff.designsystem"
     compileSdk = 34
     defaultConfig {
         minSdk = 26

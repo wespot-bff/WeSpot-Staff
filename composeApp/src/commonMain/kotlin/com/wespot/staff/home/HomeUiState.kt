@@ -1,6 +1,6 @@
 package com.wespot.staff.home
 
-import bff.wespot.staff.domain.vote.VoteQuestion
+import com.wespot.staff.domain.vote.VoteQuestion
 
 data class HomeUiState (
     val questionInput: String = "",

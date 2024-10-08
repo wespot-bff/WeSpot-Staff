@@ -33,7 +33,7 @@ kotlin {
 }
 
 android {
-    namespace = "bff.wespot.staff.domain"
+    namespace = "com.wespot.staff.domain"
     compileSdk = 34
     defaultConfig {
         minSdk = 26
