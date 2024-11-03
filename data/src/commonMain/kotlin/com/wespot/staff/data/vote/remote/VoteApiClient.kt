@@ -11,6 +11,7 @@ import io.ktor.http.path
 public interface VoteApiClient {
     suspend fun getVoteQuestions(): Result<VoteQuestionsResponse>
     suspend fun postVoteQuestion(question: VoteQuestionRequest): Result<Unit>
+    suspend fun postVoteQuestions(questions: List<VoteQuestionRequest>): Result<Unit>
     suspend fun editVoteQuestion(id: Long, question: VoteQuestionRequest): Result<Unit>
 }
 
@@ -30,6 +31,15 @@ public class DefaultVoteApiClient(
             url {
                 path("/admin/vote-options")
                 setBody(question)
+            }
+            method = HttpMethod.Post
+        }
+
+    override suspend fun postVoteQuestions(questions: List<VoteQuestionRequest>): Result<Unit> =
+        httpClient.safeRequest {
+            url {
+                path("/admin/vote-options/bulk")
+                setBody(questions)
             }
             method = HttpMethod.Post
         }

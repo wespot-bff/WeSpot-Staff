@@ -37,22 +37,30 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.domain)
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.logging)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.client.kotlin.serialization)
             implementation(libs.kotlin.serialization.json)
             implementation(libs.koin.core)
             implementation(libs.kermit)
             implementation(libs.kotlinx.datetime)
+
+            // Network
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.kotlin.serialization)
+
+            // Local
+            implementation(libs.datastore.prefereces)
         }
 
         androidMain.dependencies {
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.koin.android)
+            implementation(libs.datastore.prefereces)
         }
 
         iosMain.dependencies {
             implementation(libs.ktor.client.darwin)
+            implementation(libs.datastore.prefereces)
         }
     }
 }

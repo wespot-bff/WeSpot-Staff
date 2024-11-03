@@ -84,7 +84,6 @@ fun HomeScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp),
         ) {
             AnimatedVisibility(
                 visible = state.isSearchState,
@@ -104,7 +103,9 @@ fun HomeScreen(
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .padding(bottom = 20.dp)
+                    .weight(1f),
             ) {
                 items(
                     items = state.questionList,
@@ -126,12 +127,14 @@ fun HomeScreen(
                }
             }
 
-            WSTextField(
-                value = state.questionInput,
-                onValueChange = viewModel::setVoteQuestionInput,
-                placeholder = "추가할 질문을 입력하세요.",
-                textFieldType = WsTextFieldType.Normal,
-            )
+            Box(modifier = Modifier.padding(bottom = 20.dp)) {
+                WSTextField(
+                    value = state.questionInput,
+                    onValueChange = viewModel::setVoteQuestionInput,
+                    placeholder = "추가할 질문을 입력하세요.",
+                    textFieldType = WsTextFieldType.Normal,
+                )
+            }
 
             // 선택된 아이템이 존재하는 경우, 수정 상태로 간주하여 수정으로 처리한다.
             val isEditState = state.questionList.any { it.id == state.clickedQuestion.id }
@@ -151,7 +154,7 @@ fun HomeScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.getVoteQuestionList()
+        viewModel.observeVoteQuestionsStream()
         viewModel.observeSearchInput()
     }
 

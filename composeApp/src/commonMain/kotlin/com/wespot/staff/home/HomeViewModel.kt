@@ -8,10 +8,14 @@ import co.touchlab.kermit.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -22,22 +26,26 @@ class HomeViewModel(
     val uiState = _uiState.asStateFlow()
 
     private val searchInput: MutableStateFlow<String> = MutableStateFlow("")
-    private var wholeQuestionList: List<VoteQuestion> = listOf()
+    private val questionListFlow: StateFlow<List<VoteQuestion>> =
+        voteRepository.getVoteQuestionsStream()
+            .catch { exception ->
+                _uiEvent.send(HomeUiEvent.QuestionLoadFailedEvent)
+                Logger.e("HomeViewModel", exception)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000L),
+                initialValue = emptyList()
+            )
 
     private val _uiEvent = Channel<HomeUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun getVoteQuestionList() {
+    fun observeVoteQuestionsStream() {
         viewModelScope.launch {
-            voteRepository.getVoteQuestions()
-                .onSuccess { questions ->
-                    wholeQuestionList = questions
-                    _uiState.update { it.copy(questionList = questions) }
-                }
-                .onFailure {
-                    _uiEvent.send(HomeUiEvent.QuestionLoadFailedEvent)
-                    Logger.e("HomeViewModel", it)
-                }
+            questionListFlow.collect { questionList ->
+                _uiState.update { it.copy(questionList = questionList) }
+            }
         }
     }
 
@@ -75,7 +83,7 @@ class HomeViewModel(
                 .distinctUntilChanged()
                 .collect { keyword ->
                     if (_uiState.value.isSearchState) {
-                        val list = wholeQuestionList.filter { keyword in it.content }
+                        val list = questionListFlow.value.filter { keyword in it.content }
                         _uiState.update { it.copy(questionList = list) }
                     }
                 }
@@ -86,7 +94,7 @@ class HomeViewModel(
         val previousState = _uiState.value.isSearchState
         if (previousState) {
             setSearchInput("")
-            _uiState.update { it.copy(questionList = wholeQuestionList) }
+            _uiState.update { it.copy(questionList = questionListFlow.value) }
         }
 
         _uiState.update { it.copy(isSearchState = previousState.not()) }
@@ -104,7 +112,6 @@ class HomeViewModel(
                 .onSuccess {
                     _uiState.update { it.copy(questionInput = "") }
                     _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문이 수정되었습니다"))
-                    getVoteQuestionList()
                 }.onFailure {
                     _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문 수정에 실패하였습니다"))
                 }
@@ -122,7 +129,6 @@ class HomeViewModel(
                 .onSuccess {
                   _uiState.update { it.copy(questionInput = "") }
                     _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문이 추가되었습니다"))
-                    getVoteQuestionList()
                 }.onFailure {
                     _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문 추가에 실패하였습니다"))
                 }

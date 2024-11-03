@@ -1,7 +1,10 @@
 package com.wespot.staff.data.di
 
+import com.wespot.staff.data.core.createDataStore
 import com.wespot.staff.data.core.defaultKtorConfig
 import com.wespot.staff.data.vote.DefaultVoteRepository
+import com.wespot.staff.data.vote.local.DefaultVoteDataStore
+import com.wespot.staff.data.vote.local.VoteDataStore
 import com.wespot.staff.data.vote.remote.DefaultVoteApiClient
 import com.wespot.staff.data.vote.remote.VoteApiClient
 import com.wespot.staff.domain.vote.VoteRepository
@@ -19,8 +22,9 @@ public actual val dataModule: Module = module {
         }
     }
 
-    singleOf(::DefaultVoteApiClient) bind VoteApiClient::class
-    singleOf(::DefaultVoteRepository) bind VoteRepository::class
+    single<VoteDataStore> {
+        DefaultVoteDataStore(createDataStore())
+    }
 
     single<Repositories> {
         DefaultRepositories(
@@ -29,4 +33,7 @@ public actual val dataModule: Module = module {
             )
         )
     }
+
+    singleOf(::DefaultVoteApiClient) bind VoteApiClient::class
+    singleOf(::DefaultVoteRepository) bind VoteRepository::class
 }
