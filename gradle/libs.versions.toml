@@ -3,15 +3,15 @@ agp = "8.2.2"
 android-compileSdk = "34"
 android-minSdk = "26"
 android-targetSdk = "34"
-androidx-activityCompose = "1.9.2"
+androidx-activityCompose = "1.9.3"
 androidx-appcompat = "1.7.0"
-androidx-constraintlayout = "2.1.4"
-androidx-core-ktx = "1.13.1"
+androidx-constraintlayout = "2.2.0"
+androidx-core-ktx = "1.15.0"
 androidx-espresso-core = "3.6.1"
 androidx-lifecycle = "2.8.1"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-plugin = "1.6.11"
+compose-plugin = "1.7.0"
 junit = "4.13.2"
 kotlin = "2.0.20"
 
@@ -19,7 +19,7 @@ ksp = "2.0.10-1.0.25"
 kotlinx-coroutines = "1.8.1"
 hilt = "2.51.1"
 ktor = "2.3.12"
-kotlinx-serialization-json = "1.7.1"
+kotlinx-serialization-json = "1.7.3"
 koin = "4.0.0"
 coreKtx = "1.13.1"
 junitVersion = "1.2.1"
@@ -30,6 +30,8 @@ kermit = "1.2.2"
 build-config = "5.5.0"
 datetime = "0.6.1"
 datastore = "1.1.1"
+
+decompose = "3.2.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -55,6 +57,9 @@ kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutin
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
 
 datastore-prefereces = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
+
+decompose = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
+decompose-extensions = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
 
 # Android
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
