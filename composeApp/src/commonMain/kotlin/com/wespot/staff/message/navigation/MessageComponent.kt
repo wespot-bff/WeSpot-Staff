@@ -1,7 +1,7 @@
-package com.wespot.staff.home.navigation
+package com.wespot.staff.message.navigation
 
 import com.arkivanov.decompose.ComponentContext
 
-class HomeComponent(
+class MessageComponent(
     componentContext: ComponentContext,
 ): ComponentContext by componentContext

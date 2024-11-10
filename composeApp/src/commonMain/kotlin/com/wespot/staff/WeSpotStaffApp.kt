@@ -11,7 +11,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.wespot.staff.designsystem.theme.WeSpotTheme
-import com.wespot.staff.home.HomeScreen
+import com.wespot.staff.message.MessageScreen
 import com.wespot.staff.navigation.RootComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.report.ReportScreen
@@ -49,8 +49,8 @@ fun AppNavigation(component: RootComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is RootChild.HomeRoot -> HomeScreen(component = child.component)
             is RootChild.VoteRoot -> VoteScreen(component = child.component)
+            is RootChild.MessageRoot -> MessageScreen(component = child.component)
             is RootChild.ReportRoot -> ReportScreen(component = child.component)
         }
     }

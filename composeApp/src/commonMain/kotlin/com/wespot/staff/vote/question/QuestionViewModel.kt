@@ -1,4 +1,4 @@
-package com.wespot.staff.home
+package com.wespot.staff.vote.question
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,17 +19,17 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-class HomeViewModel(
+class QuestionViewModel(
     private val voteRepository: VoteRepository,
 ): ViewModel() {
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _uiState = MutableStateFlow(QuestionUiState())
     val uiState = _uiState.asStateFlow()
 
     private val searchInput: MutableStateFlow<String> = MutableStateFlow("")
     private val questionListFlow: StateFlow<List<VoteQuestion>> =
         voteRepository.getVoteQuestionsStream()
             .catch { exception ->
-                _uiEvent.send(HomeUiEvent.QuestionLoadFailedEvent)
+                _uiEvent.send(QuestionUiEvent.QuestionLoadFailedEvent)
                 Logger.e("HomeViewModel", exception)
             }
             .stateIn(
@@ -38,7 +38,7 @@ class HomeViewModel(
                 initialValue = emptyList()
             )
 
-    private val _uiEvent = Channel<HomeUiEvent>()
+    private val _uiEvent = Channel<QuestionUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     fun observeVoteQuestionsStream() {
@@ -71,11 +71,6 @@ class HomeViewModel(
         }
     }
 
-    fun setSearchInput(keyword: String) {
-        searchInput.value = keyword
-        _uiState.update { it.copy(searchInput = keyword) }
-    }
-
     fun observeSearchInput() {
         viewModelScope.launch(Dispatchers.Default) {
             searchInput
@@ -88,6 +83,11 @@ class HomeViewModel(
                     }
                 }
         }
+    }
+
+    fun setSearchInput(keyword: String) {
+        searchInput.value = keyword
+        _uiState.update { it.copy(searchInput = keyword) }
     }
 
     fun toggleSearchState() {
@@ -104,16 +104,16 @@ class HomeViewModel(
         viewModelScope.launch {
             val id = _uiState.value.clickedQuestion.id
             val input = _uiState.value.questionInput.ifEmpty {
-                _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문 내용을 입력해주세요."))
+                _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 내용을 입력해주세요."))
                 return@launch
             }
 
             voteRepository.editVoteQuestion(id, input)
                 .onSuccess {
                     _uiState.update { it.copy(questionInput = "") }
-                    _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문이 수정되었습니다"))
+                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문이 수정되었습니다"))
                 }.onFailure {
-                    _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문 수정에 실패하였습니다"))
+                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 수정에 실패하였습니다"))
                 }
         }
     }
@@ -121,16 +121,16 @@ class HomeViewModel(
     fun postVoteQuestion() {
         viewModelScope.launch {
             val input = _uiState.value.questionInput.ifEmpty {
-                _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문 내용을 입력해주세요."))
+                _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 내용을 입력해주세요."))
                 return@launch
             }
 
             voteRepository.postVoteQuestion(question = input)
                 .onSuccess {
                   _uiState.update { it.copy(questionInput = "") }
-                    _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문이 추가되었습니다"))
+                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문이 추가되었습니다"))
                 }.onFailure {
-                    _uiEvent.send(HomeUiEvent.QuestionPostEvent("질문 추가에 실패하였습니다"))
+                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 추가에 실패하였습니다"))
                 }
         }
     }

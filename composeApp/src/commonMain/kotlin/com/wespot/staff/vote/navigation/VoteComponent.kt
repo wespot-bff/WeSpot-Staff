@@ -4,4 +4,8 @@ import com.arkivanov.decompose.ComponentContext
 
 class VoteComponent(
     componentContext: ComponentContext,
-): ComponentContext by componentContext
+    private val popBackStack: () -> Unit,
+): ComponentContext by componentContext {
+    fun navigateUp() = popBackStack()
+
+}
