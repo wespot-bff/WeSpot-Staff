@@ -16,6 +16,7 @@ import com.wespot.staff.designsystem.theme.StaticTypography
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
 import org.jetbrains.compose.resources.painterResource
 import wespotstaff.composeapp.generated.resources.Res
+import wespotstaff.composeapp.generated.resources.right_arrow
 
 @Composable
 internal fun NavigationListItem(
