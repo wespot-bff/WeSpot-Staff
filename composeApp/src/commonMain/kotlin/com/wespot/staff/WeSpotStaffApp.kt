@@ -16,6 +16,7 @@ import com.wespot.staff.navigation.RootComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.report.ReportScreen
 import com.wespot.staff.vote.VoteScreen
+import com.wespot.staff.vote.question.QuestionScreen
 
 @Composable
 fun WeSpotStaffApp(component: RootComponent) {
@@ -49,7 +50,7 @@ fun AppNavigation(component: RootComponent) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is RootChild.VoteRoot -> VoteScreen(component = child.component)
+            is RootChild.VoteRoot -> QuestionScreen(component = child.component)
             is RootChild.MessageRoot -> MessageScreen(component = child.component)
             is RootChild.ReportRoot -> ReportScreen(component = child.component)
         }
