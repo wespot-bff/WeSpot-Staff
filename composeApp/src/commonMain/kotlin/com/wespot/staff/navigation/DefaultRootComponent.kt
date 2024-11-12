@@ -4,14 +4,14 @@ import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
-import com.arkivanov.decompose.router.stack.pop
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
-import com.wespot.staff.vote.navigation.VoteComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.report.navigation.ReportComponent
 import com.wespot.staff.message.navigation.MessageComponent
+import com.wespot.staff.vote.navigation.DefaultVoteRootComponent
+import com.wespot.staff.vote.navigation.VoteRootComponent
 
 class DefaultRootComponent(
     componentContext: ComponentContext,
@@ -36,12 +36,8 @@ class DefaultRootComponent(
             is RootConfiguration.Report -> RootChild.ReportRoot(reportComponent(componentContext))
         }
 
-    private fun voteComponent(componentContext: ComponentContext): VoteComponent =
-        VoteComponent(
-            componentContext = componentContext,
-            popBackStack = {
-            },
-        )
+    private fun voteComponent(componentContext: ComponentContext): VoteRootComponent =
+        DefaultVoteRootComponent(componentContext = componentContext)
 
     private fun messageComponent(componentContext: ComponentContext): MessageComponent =
         MessageComponent(componentContext = componentContext)
