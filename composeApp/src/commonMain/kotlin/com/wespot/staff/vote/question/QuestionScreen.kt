@@ -36,7 +36,6 @@ import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
-import com.wespot.staff.vote.navigation.VoteComponent
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import wespotstaff.composeapp.generated.resources.Res
@@ -45,7 +44,7 @@ import wespotstaff.composeapp.generated.resources.search
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuestionScreen(
-    component: VoteComponent,
+    component: QuestionComponent,
     viewModel: QuestionViewModel = koinViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -60,7 +59,7 @@ fun QuestionScreen(
             WSTopBar(
                 title = "질문 추가/수정",
                 canNavigateBack = true,
-                navigateUp = component::navigateUp,
+                navigateUp = {  },
                 action = {
                     IconButton(
                         modifier = Modifier.padding(end = 8.dp),
