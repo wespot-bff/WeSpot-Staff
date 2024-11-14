@@ -41,6 +41,8 @@ kotlin {
             implementation(projects.designsystem)
             implementation(projects.domain)
             implementation(projects.data)
+
+            // Compose
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -48,6 +50,7 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.material3)
+
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
             api(libs.koin.core)
@@ -58,6 +61,7 @@ kotlin {
             implementation(libs.decompose)
             implementation(libs.decompose.extensions)
             implementation(libs.kotlin.serialization.json)
+            implementation(libs.kotlinx.collections.immutable)
         }
     }
 }
