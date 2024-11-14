@@ -18,12 +18,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -50,16 +51,15 @@ fun QuestionScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val interactionSource = remember { MutableInteractionSource() }
 
-    val state = viewModel.uiState.collectAsStateWithLifecycle().value
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        backgroundColor = WeSpotThemeManager.colors.backgroundColor,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             WSTopBar(
                 title = "질문 추가/수정",
                 canNavigateBack = true,
-                navigateUp = {  },
+                navigateUp = { component.navigateUp() },
                 action = {
                     IconButton(
                         modifier = Modifier.padding(end = 8.dp),
