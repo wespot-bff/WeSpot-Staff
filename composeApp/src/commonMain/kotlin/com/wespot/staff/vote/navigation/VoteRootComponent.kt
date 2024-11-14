@@ -16,7 +16,7 @@ import kotlinx.serialization.Serializable
 interface VoteRootComponent {
     val stack: Value<ChildStack<*, VoteChild>>
 
-    fun navigateUp()
+    fun popBackStack()
 
     sealed class VoteChild {
         class VoteHomeScreen(val component: VoteHomeComponent) : VoteChild()
@@ -39,7 +39,7 @@ class DefaultVoteRootComponent(
             childFactory = ::createChild,
         )
 
-    override fun navigateUp() {
+    override fun popBackStack() {
         navigation.pop()
     }
 
@@ -62,10 +62,10 @@ class DefaultVoteRootComponent(
         )
 
     private fun questionComponent(componentContext: ComponentContext): QuestionComponent =
-        QuestionComponent(componentContext = componentContext)
+        QuestionComponent(componentContext = componentContext, popBackStack = ::popBackStack)
 
     private fun questionWriteComponent(componentContext: ComponentContext): QuestionWriteComponent =
-        QuestionWriteComponent(componentContext = componentContext)
+        QuestionWriteComponent(componentContext = componentContext, popBackStack = ::popBackStack)
 
     @Serializable
     sealed interface VoteConfiguration {
