@@ -2,7 +2,6 @@ package com.wespot.staff.vote.write.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import co.touchlab.kermit.Logger
 import com.wespot.staff.domain.vote.VoteRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -55,15 +54,13 @@ class QuestionAddViewModel(
 
     fun submitQuestionList() {
         viewModelScope.launch {
-            val questionList = _uiState.value.questionList.filter { it.isNotBlank() }
-            Logger.d(questionList.toTypedArray().contentToString())
-            /*repository.postVoteQuestions(questionList)
+            repository.postVoteQuestions(_uiState.value.questionList)
                 .onSuccess {
 
                 }
                 .onFailure {
 
-                }*/
+                }
         }
     }
 }

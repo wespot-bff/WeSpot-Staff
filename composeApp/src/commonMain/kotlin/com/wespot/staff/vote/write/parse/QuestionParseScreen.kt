@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,13 +41,13 @@ fun QuestionParseScreen(
         )
 
         WSTextField(
-            value = "",
-            onValueChange = { text ->
-
-            },
+            value = state.questionListString,
+            onValueChange = viewModel::setQuestionListString,
             placeholder = "개행을 기준으로 목록으로 변환됩니다.",
             textFieldType = WsTextFieldType.Message,
         )
+
+        Spacer(modifier = Modifier.height(32.dp))
 
         Spacer(modifier = Modifier.weight(1f))
 
