@@ -1,6 +1,5 @@
 package com.wespot.staff.vote.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -46,7 +45,7 @@ fun VoteHomeScreen(
             )
 
             NavigationListItem(
-                text = "여러 질문 추가",
+                text = "여러 질문 작성",
                 onClick = component::navigateToQuestionWriteScreen
             )
         }
