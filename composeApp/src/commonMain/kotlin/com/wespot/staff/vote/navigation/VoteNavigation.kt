@@ -10,6 +10,7 @@ import com.wespot.staff.vote.home.VoteHomeScreen
 import com.wespot.staff.vote.navigation.VoteRootComponent.VoteChild
 import com.wespot.staff.vote.question.QuestionScreen
 import com.wespot.staff.vote.write.QuestionWriteScreen
+import com.wespot.staff.vote.write.confirm.QuestionConfirmScreen
 
 @Composable
 fun VoteNavigation(component: VoteRootComponent) {
@@ -22,6 +23,7 @@ fun VoteNavigation(component: VoteRootComponent) {
             is VoteChild.VoteHomeScreen -> VoteHomeScreen(child.component)
             is VoteChild.QuestionScreen -> QuestionScreen(child.component)
             is VoteChild.QuestionWriteScreen -> QuestionWriteScreen(child.component)
+            is VoteChild.QuestionConfirmScreen -> QuestionConfirmScreen(child.component)
         }
     }
 }
