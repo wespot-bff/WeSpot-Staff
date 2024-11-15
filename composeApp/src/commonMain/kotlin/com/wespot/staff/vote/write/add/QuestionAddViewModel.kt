@@ -2,6 +2,7 @@ package com.wespot.staff.vote.write.add
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wespot.staff.domain.vote.VoteQuestionContent
 import com.wespot.staff.domain.vote.VoteRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,6 +20,12 @@ class QuestionAddViewModel(
     private val _uiEvent = Channel<QuestionAddUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
+    fun setQuestionList(questionList: List<VoteQuestionContent>) {
+        _uiState.update { state ->
+            state.copy(questionList = questionList)
+        }
+    }
+
     fun setQuestionItem(index: Int, question: String) {
         runCatching {
             _uiState.update { state ->
@@ -29,14 +36,12 @@ class QuestionAddViewModel(
                 }
                 state.copy(questionList = updatedList)
             }
-        }.onFailure {
-
         }
     }
 
     fun addQuestionItem() {
         _uiState.update { state ->
-            state.copy(questionList = state.questionList + "")
+            state.copy(questionList = state.questionList + VoteQuestionContent())
         }
     }
 
@@ -47,19 +52,20 @@ class QuestionAddViewModel(
                 updatedList.removeAt(index)
                 state.copy(questionList = updatedList)
             }
-        }.onFailure {
-
         }
     }
 
     fun submitQuestionList() {
         viewModelScope.launch {
-            repository.postVoteQuestions(_uiState.value.questionList)
+            val questionList = _uiState.value.questionList
+                .filter { it.isNotBlank() }
+                .map { it.trim() }
+            repository.postVoteQuestions(questionList)
                 .onSuccess {
-
+                    _uiEvent.send(QuestionAddUiEvent.NavigateToQuestionScreen)
                 }
-                .onFailure {
-
+                .onFailure { exception ->
+                    _uiEvent.send(QuestionAddUiEvent.ShowToast("${exception.message} 문제가 발생했어요."))
                 }
         }
     }

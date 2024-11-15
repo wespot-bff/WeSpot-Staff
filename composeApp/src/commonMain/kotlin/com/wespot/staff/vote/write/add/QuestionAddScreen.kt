@@ -15,17 +15,20 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wespot.staff.common.clickableSingle
+import com.wespot.staff.common.collectEvent
 import com.wespot.staff.designsystem.component.WSButton
 import com.wespot.staff.designsystem.component.WSButtonType
 import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.StaticTypography
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
+import com.wespot.staff.domain.vote.VoteQuestionContent
 import org.jetbrains.compose.resources.painterResource
 import wespotstaff.composeapp.generated.resources.Res
 import wespotstaff.composeapp.generated.resources.ic_delete
@@ -33,25 +36,32 @@ import wespotstaff.composeapp.generated.resources.ic_delete
 @Composable
 fun QuestionAddScreen(
     viewModel: QuestionAddViewModel,
+    questionList: List<VoteQuestionContent>? = null,
+    titleContent: @Composable () -> Unit,
+    showToast: suspend (String) -> Unit,
+    navigateToQuestionScreen: (String) -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    viewModel.uiEvent.collectEvent {
+        when (it) {
+            QuestionAddUiEvent.NavigateToQuestionScreen -> navigateToQuestionScreen("작성 완료")
+
+            is QuestionAddUiEvent.ShowToast -> { showToast(it.message) }
+        }
+    }
 
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
         LazyColumn(
-            modifier = Modifier.padding(horizontal = 20.dp),
+            modifier = Modifier
+                .padding(horizontal = 20.dp)
+                .weight(1f),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
             item {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 32.dp),
-                    text = "여러 질문 작성하기",
-                    style = StaticTypography().header1,
-                    color = WeSpotThemeManager.colors.txtTitleColor,
-                )
+                titleContent()
             }
 
             itemsIndexed(items = state.questionList) { index, item ->
@@ -66,8 +76,8 @@ fun QuestionAddScreen(
                 QuestionListItem(
                     index = index,
                     text = item,
-                    onTextChanged = {
-                        viewModel.setQuestionItem(index, item)
+                    onTextChanged = { value ->
+                        viewModel.setQuestionItem(index, value)
                     },
                     onDeleteButtonClicked = viewModel::deleteQuestionItem,
                 )
@@ -86,13 +96,18 @@ fun QuestionAddScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Spacer(modifier = Modifier.weight(1f))
-
         WSButton(
             text = "작성 완료",
+            enabled = state.questionList.isNotEmpty(),
             onClick = viewModel::submitQuestionList,
-            content = { it() }
+            content = { it() },
         )
+    }
+
+    LaunchedEffect(Unit) {
+        questionList?.let {
+            viewModel.setQuestionList(it)
+        }
     }
 }
 
