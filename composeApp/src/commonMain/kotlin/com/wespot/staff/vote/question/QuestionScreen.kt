@@ -159,6 +159,10 @@ fun QuestionScreen(
     LaunchedEffect(Unit) {
         viewModel.observeVoteQuestionsStream()
         viewModel.observeSearchInput()
+
+        component.toastMessage?.let {
+            snackbarHostState.showSnackbar(it)
+        }
     }
 
     viewModel.uiEvent.collectEvent {
