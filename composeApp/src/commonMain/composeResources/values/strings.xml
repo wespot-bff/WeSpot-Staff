@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="home">홈</string>
+    <string name="message">쪽지</string>
     <string name="vote">비밀 투표</string>
     <string name="report">신고</string>
+    <string name="tab_add">추가하기</string>
+    <string name="tab_parse">변환하기</string>
 </resources>

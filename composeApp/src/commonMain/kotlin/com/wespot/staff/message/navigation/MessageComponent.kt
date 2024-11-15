@@ -1,7 +1,7 @@
-package com.wespot.staff.vote.navigation
+package com.wespot.staff.message.navigation
 
 import com.arkivanov.decompose.ComponentContext
 
-class VoteComponent(
+class MessageComponent(
     componentContext: ComponentContext,
 ): ComponentContext by componentContext

@@ -5,19 +5,20 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.popTo
-import com.arkivanov.decompose.router.stack.replaceAll
+import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
-import com.wespot.staff.home.navigation.HomeComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.report.navigation.ReportComponent
-import com.wespot.staff.vote.navigation.VoteComponent
+import com.wespot.staff.message.navigation.MessageComponent
+import com.wespot.staff.vote.navigation.DefaultVoteRootComponent
+import com.wespot.staff.vote.navigation.VoteRootComponent
 
 class DefaultRootComponent(
     componentContext: ComponentContext,
 ) : RootComponent, ComponentContext by componentContext {
     private val navigation = StackNavigation<RootConfiguration>()
 
-    override val initialConfiguration: RootConfiguration = RootConfiguration.Home
+    override val initialConfiguration: RootConfiguration = RootConfiguration.Vote
 
     override val stack: Value<ChildStack<*, RootChild>> =
         childStack(
@@ -30,16 +31,16 @@ class DefaultRootComponent(
 
     private fun createChild(config: RootConfiguration, componentContext: ComponentContext): RootChild =
         when (config) {
-            is RootConfiguration.Home -> RootChild.HomeRoot(homeComponent(componentContext))
             is RootConfiguration.Vote -> RootChild.VoteRoot(voteComponent(componentContext))
+            is RootConfiguration.Message -> RootChild.MessageRoot(messageComponent(componentContext))
             is RootConfiguration.Report -> RootChild.ReportRoot(reportComponent(componentContext))
         }
 
-    private fun homeComponent(componentContext: ComponentContext): HomeComponent =
-        HomeComponent(componentContext = componentContext)
+    private fun voteComponent(componentContext: ComponentContext): VoteRootComponent =
+        DefaultVoteRootComponent(componentContext = componentContext)
 
-    private fun voteComponent(componentContext: ComponentContext): VoteComponent =
-        VoteComponent(componentContext = componentContext)
+    private fun messageComponent(componentContext: ComponentContext): MessageComponent =
+        MessageComponent(componentContext = componentContext)
 
     private fun reportComponent(componentContext: ComponentContext): ReportComponent =
         ReportComponent(componentContext = componentContext)
@@ -49,6 +50,6 @@ class DefaultRootComponent(
     }
 
     override fun navigateRoot(configuration: RootConfiguration) {
-        navigation.replaceAll(configuration)
+        navigation.pushToFront(configuration)
     }
 }

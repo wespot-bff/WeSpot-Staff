@@ -30,6 +30,7 @@ kermit = "1.2.2"
 build-config = "5.5.0"
 datetime = "0.6.1"
 datastore = "1.1.1"
+kotlinx-collections-immutable = "0.3.7"
 
 decompose = "3.2.2"
 
@@ -55,6 +56,7 @@ kotlin-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-s
 
 kotlinx-coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "datetime" }
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 
 datastore-prefereces = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastore" }
 

@@ -1,6 +1,5 @@
 package com.wespot.staff.data.vote
 
-import co.touchlab.kermit.Logger
 import com.wespot.staff.data.vote.local.VoteDataStore
 import com.wespot.staff.data.vote.model.VoteQuestionRequest
 import com.wespot.staff.data.vote.remote.VoteApiClient
@@ -30,6 +29,9 @@ public class DefaultVoteRepository(
             refreshVoteQuestions()
         }
     }
+
+    override suspend fun postVoteQuestions(questions: List<VoteQuestionContent>): Result<Unit> =
+        voteApi.postVoteQuestions(questions.map { VoteQuestionRequest(it) })
 
     private suspend fun getVoteQuestions(): Result<List<VoteQuestion>> =
         voteApi.getVoteQuestions().mapCatching {

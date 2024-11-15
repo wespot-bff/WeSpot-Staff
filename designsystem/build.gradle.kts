@@ -35,6 +35,7 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
+            implementation(libs.kotlinx.collections.immutable)
         }
     }
 }

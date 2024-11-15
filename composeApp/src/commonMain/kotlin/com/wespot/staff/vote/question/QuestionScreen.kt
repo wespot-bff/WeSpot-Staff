@@ -1,4 +1,4 @@
-package com.wespot.staff.home
+package com.wespot.staff.vote.question
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
@@ -18,12 +18,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.Scaffold
 import androidx.compose.material.SnackbarHost
 import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -36,7 +37,6 @@ import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
-import com.wespot.staff.home.navigation.HomeComponent
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import wespotstaff.composeapp.generated.resources.Res
@@ -44,21 +44,22 @@ import wespotstaff.composeapp.generated.resources.search
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
-    component: HomeComponent,
-    viewModel: HomeViewModel = koinViewModel(),
+fun QuestionScreen(
+    component: QuestionComponent,
+    viewModel: QuestionViewModel = koinViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val interactionSource = remember { MutableInteractionSource() }
 
-    val state = viewModel.uiState.collectAsStateWithLifecycle().value
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     Scaffold(
-        backgroundColor = WeSpotThemeManager.colors.backgroundColor,
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             WSTopBar(
-                title = "WeSpot Staff",
+                title = "질문 추가/수정",
+                canNavigateBack = true,
+                navigateUp = { component.navigateUp() },
                 action = {
                     IconButton(
                         modifier = Modifier.padding(end = 8.dp),
@@ -158,15 +159,19 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         viewModel.observeVoteQuestionsStream()
         viewModel.observeSearchInput()
+
+        component.toastMessage?.let {
+            snackbarHostState.showSnackbar(it)
+        }
     }
 
     viewModel.uiEvent.collectEvent {
         when (it) {
-            is HomeUiEvent.QuestionPostEvent -> {
+            is QuestionUiEvent.QuestionPostEvent -> {
                 snackbarHostState.showSnackbar(message = it.message)
             }
 
-            is HomeUiEvent.QuestionLoadFailedEvent -> {
+            is QuestionUiEvent.QuestionLoadFailedEvent -> {
                 snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
             }
         }
