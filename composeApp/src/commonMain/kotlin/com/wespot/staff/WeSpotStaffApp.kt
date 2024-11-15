@@ -58,7 +58,7 @@ fun BottomNavigationBar(component: RootComponent, child: RootChild) {
             is RootChild.VoteRoot -> {
                 val voteChild by targetChild.component.stack.subscribeAsState()
                 when (voteChild.active.instance) {
-                    is VoteChild.QuestionScreen, is VoteChild.QuestionWriteScreen -> false
+                    is VoteChild.QuestionScreen, is VoteChild.QuestionWriteScreen, is VoteChild.QuestionConfirmScreen -> false
                     is VoteChild.VoteHomeScreen -> true
                 }
             }
