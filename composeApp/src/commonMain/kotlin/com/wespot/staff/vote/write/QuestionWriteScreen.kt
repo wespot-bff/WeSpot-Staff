@@ -15,7 +15,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
+import com.wespot.staff.common.clickableSingle
 import com.wespot.staff.designsystem.component.WSHomeTabRow
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.theme.StaticTypography
@@ -43,6 +45,7 @@ fun QuestionWriteScreen(
     )
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val snackbarHostState = remember { SnackbarHostState() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -52,6 +55,9 @@ fun QuestionWriteScreen(
                 canNavigateBack = true,
                 navigateUp = component::navigateUp,
             )
+        },
+        modifier = Modifier.clickableSingle {
+            keyboardController?.hide()
         },
     ) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {

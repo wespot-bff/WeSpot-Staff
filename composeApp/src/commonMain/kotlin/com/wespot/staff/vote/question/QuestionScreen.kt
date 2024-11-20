@@ -6,8 +6,6 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,9 +25,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.wespot.staff.common.clickableSingle
 import com.wespot.staff.common.collectEvent
 import com.wespot.staff.designsystem.component.WSButton
 import com.wespot.staff.designsystem.component.WSListItem
@@ -49,7 +49,7 @@ fun QuestionScreen(
     viewModel: QuestionViewModel = koinViewModel(),
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val interactionSource = remember { MutableInteractionSource() }
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -76,10 +76,8 @@ fun QuestionScreen(
         },
         modifier = Modifier
             .fillMaxSize()
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null
-            ) {
+            .clickableSingle {
+                keyboardController?.hide()
                 viewModel.clearQuestionClickedState()
             },
     ) { innerPadding ->
