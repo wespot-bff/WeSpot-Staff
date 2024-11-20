@@ -1,6 +1,6 @@
 package com.wespot.staff.common
 
-import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.Indication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
@@ -16,6 +16,8 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.debounce
 
 fun Modifier.clickableSingle(
+    interactionSource: MutableInteractionSource? = null,
+    indication: Indication? = null,
     enabled: Boolean = true,
     onClickLabel: String? = null,
     role: Role? = null,
@@ -35,8 +37,8 @@ fun Modifier.clickableSingle(
             onClickLabel = onClickLabel,
             onClick = { manager.processEvent { onClick() } },
             role = role,
-            indication = LocalIndication.current,
-            interactionSource = remember { MutableInteractionSource() },
+            indication = indication,
+            interactionSource = interactionSource,
         )
     }
 }
