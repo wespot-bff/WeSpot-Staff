@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -35,6 +36,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.androidx.compose)
             implementation(libs.koin.android)
+            implementation(libs.firebase.common)
         }
         commonMain.dependencies {
             implementation(projects.common)
@@ -62,6 +64,8 @@ kotlin {
             implementation(libs.decompose.extensions)
             implementation(libs.kotlin.serialization.json)
             implementation(libs.kotlinx.collections.immutable)
+
+            implementation(libs.bundles.kotlin.firebase)
         }
     }
 }

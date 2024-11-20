@@ -34,6 +34,10 @@ kotlinx-collections-immutable = "0.3.7"
 
 decompose = "3.2.2"
 
+kotlin-firebase = "2.1.0"
+firebase-common = "21.0.0"
+google-services = "4.4.2"
+
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
@@ -63,6 +67,13 @@ datastore-prefereces = { group = "androidx.datastore", name = "datastore-prefere
 decompose = { group = "com.arkivanov.decompose", name = "decompose", version.ref = "decompose" }
 decompose-extensions = { group = "com.arkivanov.decompose", name = "extensions-compose", version.ref = "decompose" }
 
+kotlin-firebase-analytics = { module = "dev.gitlive:firebase-analytics", version.ref = "kotlin-firebase" }
+kotlin-firebase-crashlytics = { module = "dev.gitlive:firebase-crashlytics", version.ref = "kotlin-firebase"  }
+kotlin-firebase-config = { module = "dev.gitlive:firebase-config", version.ref = "kotlin-firebase" }
+kotlin-firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "kotlin-firebase" }
+kotlin-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "kotlin-firebase" }
+firebase-common = { module = "com.google.firebase:firebase-common-ktx", version.ref = "firebase-common" }
+
 # Android
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
@@ -77,6 +88,15 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 
+[bundles]
+kotlin-firebase = [
+    "kotlin-firebase-analytics",
+    "kotlin-firebase-crashlytics",
+    "kotlin-firebase-config",
+    "kotlin-firebase-auth",
+    "kotlin-firebase-firestore",
+]
+
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
@@ -87,3 +107,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 build-config = { id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
