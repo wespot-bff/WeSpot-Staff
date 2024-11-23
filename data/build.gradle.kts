@@ -12,6 +12,7 @@ properties.load(rootProject.file("local.properties").inputStream())
 
 buildConfig {
     buildConfigField<String>("BASE_URL", properties.getProperty("BASE_URL"))
+    buildConfigField<String>("API_AUTHORIZATION_VALUE", properties.getProperty("API_AUTHORIZATION_VALUE"))
 }
 
 kotlin {
