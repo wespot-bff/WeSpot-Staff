@@ -16,6 +16,7 @@ import kotlinx.serialization.json.Json
 public fun HttpClientConfig<*>.defaultKtorConfig() {
     defaultRequest {
         header(HttpHeaders.ContentType, ContentType.Application.Json)
+        header(HttpHeaders.Authorization, BuildConfig.API_AUTHORIZATION_VALUE)
         url(BuildConfig.BASE_URL)
     }
 
