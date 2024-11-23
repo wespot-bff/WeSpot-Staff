@@ -62,11 +62,18 @@ class QuestionAddViewModel(
                 .map { it.trim() }
             repository.postVoteQuestions(questionList)
                 .onSuccess {
+                    clearState()
                     _uiEvent.send(QuestionAddUiEvent.NavigateToQuestionScreen)
                 }
                 .onFailure { exception ->
                     _uiEvent.send(QuestionAddUiEvent.ShowToast("${exception.message} 문제가 발생했어요."))
                 }
+        }
+    }
+
+    private fun clearState() {
+        _uiState.update {
+            it.copy(questionList = listOf())
         }
     }
 }
