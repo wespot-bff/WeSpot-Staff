@@ -38,7 +38,7 @@ public class DefaultVoteApiClient(
     override suspend fun postVoteQuestions(questions: List<VoteQuestionRequest>): Result<Unit> =
         httpClient.safeRequest {
             url {
-                path("/admin/vote-options/bulk")
+                path("/admin/vote-options/bulks")
                 setBody(questions)
             }
             method = HttpMethod.Post
