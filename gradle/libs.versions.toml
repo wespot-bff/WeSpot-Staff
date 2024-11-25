@@ -37,6 +37,7 @@ decompose = "3.2.2"
 kotlin-firebase = "2.1.0"
 firebase-common = "21.0.0"
 google-services = "4.4.2"
+crashlytics = "3.0.2"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -74,10 +75,7 @@ kotlin-firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "ko
 kotlin-firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "kotlin-firebase" }
 firebase-common = { module = "com.google.firebase:firebase-common-ktx", version.ref = "firebase-common" }
 
-# Android
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
-hilt-ksp = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 
@@ -103,8 +101,7 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 build-config = { id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics"}
