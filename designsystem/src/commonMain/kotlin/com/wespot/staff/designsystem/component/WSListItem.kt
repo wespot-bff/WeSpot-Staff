@@ -23,6 +23,7 @@ fun WSListItem(
     title: String,
     subTitle: String,
     selected: Boolean,
+    isMultiLine: Boolean = false,
     onClick: () -> Unit = { },
 ) {
     Box(
@@ -51,16 +52,16 @@ fun WSListItem(
                 text = title,
                 style = StaticTypography().body2,
                 color = WeSpotThemeManager.colors.txtTitleColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                maxLines = if (isMultiLine) Int.MAX_VALUE else 1,
+                overflow = if (isMultiLine) TextOverflow.Clip else TextOverflow.Ellipsis,
             )
 
             Text(
                 text = subTitle,
                 style = StaticTypography().body5,
                 color = WeSpotThemeManager.colors.txtSubColor,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                maxLines = if (isMultiLine) Int.MAX_VALUE else 1,
+                overflow = if (isMultiLine) TextOverflow.Clip else TextOverflow.Ellipsis,
             )
         }
     }
