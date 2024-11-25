@@ -5,7 +5,7 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushNew
+import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
 import com.wespot.staff.domain.vote.VoteQuestionContent
 import com.wespot.staff.vote.QuestionWriteComponent
@@ -17,6 +17,8 @@ import kotlinx.serialization.Serializable
 
 interface VoteRootComponent {
     val stack: Value<ChildStack<*, VoteChild>>
+
+    fun isBottomBarImpression(voteChild: VoteChild): Boolean
 
     fun popBackStack()
 
@@ -42,6 +44,10 @@ class DefaultVoteRootComponent(
             childFactory = ::createChild,
         )
 
+    /** 바텀 네비게이션 바 노출 화면 지정 */
+    override fun isBottomBarImpression(voteChild: VoteChild): Boolean =
+        voteChild is VoteChild.VoteHomeScreen
+
     override fun popBackStack() {
         navigation.pop()
     }
@@ -58,10 +64,10 @@ class DefaultVoteRootComponent(
         VoteHomeComponent(
             componentContext = componentContext,
             navigateToQuestion = {
-                navigation.pushNew(VoteConfiguration.Question())
+                navigation.pushToFront(VoteConfiguration.Question())
             },
             navigateToQuestionWrite = {
-                navigation.pushNew(VoteConfiguration.QuestionWrite)
+                navigation.pushToFront(VoteConfiguration.QuestionWrite)
             }
         )
 
@@ -75,8 +81,8 @@ class DefaultVoteRootComponent(
         QuestionWriteComponent(
             componentContext = componentContext,
             popBackStack = ::popBackStack,
-            navigateToQuestionConfirm = { navigation.pushNew(VoteConfiguration.QuestionConfirm(it)) },
-            navigateToQuestion = { navigation.pushNew(VoteConfiguration.Question(it)) },
+            navigateToQuestionConfirm = { navigation.pushToFront(VoteConfiguration.QuestionConfirm(it)) },
+            navigateToQuestion = { navigation.pushToFront(VoteConfiguration.Question(it)) },
         )
 
     private fun questionConfirmComponent(
@@ -87,7 +93,7 @@ class DefaultVoteRootComponent(
             componentContext = componentContext,
             questionList = config.questionList,
             popBackStack = ::popBackStack,
-            navigateToQuestion = { navigation.pushNew(VoteConfiguration.Question(it)) },
+            navigateToQuestion = { navigation.pushToFront(VoteConfiguration.Question(it)) },
         )
 
     @Serializable
