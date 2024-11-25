@@ -9,11 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -23,29 +21,33 @@ class QuestionViewModel(
     private val voteRepository: VoteRepository,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(QuestionUiState())
-    val uiState = _uiState.asStateFlow()
+    val uiState = _uiState
+        .onStart {
+            getVoteQuestions()
+            observeSearchInput()
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000L),
+            initialValue = _uiState.value
+        )
 
     private val searchInput: MutableStateFlow<String> = MutableStateFlow("")
-    private val questionListFlow: StateFlow<List<VoteQuestion>> =
-        voteRepository.getVoteQuestionsStream()
-            .catch { exception ->
-                _uiEvent.send(QuestionUiEvent.QuestionLoadFailedEvent)
-                Logger.e("HomeViewModel", exception)
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000L),
-                initialValue = emptyList()
-            )
+    private var voteQuestions: List<VoteQuestion> = listOf()
 
     private val _uiEvent = Channel<QuestionUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun observeVoteQuestionsStream() {
+    private fun getVoteQuestions() {
         viewModelScope.launch {
-            questionListFlow.collect { questionList ->
-                _uiState.update { it.copy(questionList = questionList) }
-            }
+            voteRepository.getVoteQuestions()
+                .onSuccess { questionList ->
+                    _uiState.update { it.copy(questionList = questionList) }
+                    voteQuestions = questionList
+                }
+                .onFailure { exception ->
+                    _uiEvent.send(QuestionUiEvent.QuestionLoadFailedEvent)
+                    Logger.e("HomeViewModel", exception)
+                }
         }
     }
 
@@ -71,14 +73,14 @@ class QuestionViewModel(
         }
     }
 
-    fun observeSearchInput() {
+    private fun observeSearchInput() {
         viewModelScope.launch(Dispatchers.Default) {
             searchInput
                 .debounce(500)
                 .distinctUntilChanged()
                 .collect { keyword ->
                     if (_uiState.value.isSearchState) {
-                        val list = questionListFlow.value.filter { keyword in it.content }
+                        val list = voteQuestions.filter { keyword in it.content }
                         _uiState.update { it.copy(questionList = list) }
                     }
                 }
@@ -94,7 +96,7 @@ class QuestionViewModel(
         val previousState = _uiState.value.isSearchState
         if (previousState) {
             setSearchInput("")
-            _uiState.update { it.copy(questionList = questionListFlow.value) }
+            _uiState.update { it.copy(questionList = voteQuestions) }
         }
 
         _uiState.update { it.copy(isSearchState = previousState.not()) }
