@@ -11,5 +11,5 @@ sealed interface RootConfiguration {
     data object Vote : RootConfiguration
 
     @Serializable
-    data object Report : RootConfiguration
+    data object Entire : RootConfiguration
 }

@@ -3,12 +3,12 @@ package com.wespot.staff.navigation
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
 import wespotstaff.composeapp.generated.resources.Res
+import wespotstaff.composeapp.generated.resources.entire
 import wespotstaff.composeapp.generated.resources.entire_empty
 import wespotstaff.composeapp.generated.resources.entire_tab
 import wespotstaff.composeapp.generated.resources.message
 import wespotstaff.composeapp.generated.resources.message_empty
 import wespotstaff.composeapp.generated.resources.message_tab
-import wespotstaff.composeapp.generated.resources.report
 import wespotstaff.composeapp.generated.resources.vote
 import wespotstaff.composeapp.generated.resources.vote_empty
 import wespotstaff.composeapp.generated.resources.vote_tab
@@ -31,10 +31,10 @@ internal enum class BottomBarState(
         emptyIcon = Res.drawable.message_empty,
         title = Res.string.message,
     ),
-    Report(
-        config = RootConfiguration.Report,
+    Entire(
+        config = RootConfiguration.Entire,
         icon = Res.drawable.entire_tab,
         emptyIcon = Res.drawable.entire_empty,
-        title = Res.string.report,
+        title = Res.string.entire,
     ),
 }

@@ -27,4 +27,3 @@ fun VoteNavigation(component: VoteRootComponent) {
         }
     }
 }
-

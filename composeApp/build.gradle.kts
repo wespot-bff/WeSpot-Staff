@@ -8,6 +8,8 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.firebase.crashlytics)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -35,6 +37,7 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             implementation(libs.koin.androidx.compose)
             implementation(libs.koin.android)
+            implementation(libs.firebase.common)
         }
         commonMain.dependencies {
             implementation(projects.common)
@@ -62,6 +65,8 @@ kotlin {
             implementation(libs.decompose.extensions)
             implementation(libs.kotlin.serialization.json)
             implementation(libs.kotlinx.collections.immutable)
+
+            implementation(libs.bundles.kotlin.firebase)
         }
     }
 }
@@ -78,8 +83,8 @@ android {
         applicationId = "com.wespot.staff"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = 3
+        versionName = "1.1.1"
     }
     packaging {
         resources {
@@ -94,12 +99,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
     buildFeatures {
         compose = true
     }
     dependencies {
         debugImplementation(compose.uiTooling)
+        coreLibraryDesugaring ("com.android.tools:desugar_jdk_libs:2.1.2")
     }
 }
-

@@ -3,12 +3,13 @@ package com.wespot.staff.navigation
 import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
+import com.arkivanov.decompose.router.stack.bringToFront
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.popTo
-import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
+import com.wespot.staff.entire.navigation.DefaultEntireRootComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
-import com.wespot.staff.report.navigation.ReportComponent
+import com.wespot.staff.entire.navigation.EntireRootComponent
 import com.wespot.staff.message.navigation.MessageComponent
 import com.wespot.staff.vote.navigation.DefaultVoteRootComponent
 import com.wespot.staff.vote.navigation.VoteRootComponent
@@ -33,7 +34,7 @@ class DefaultRootComponent(
         when (config) {
             is RootConfiguration.Vote -> RootChild.VoteRoot(voteComponent(componentContext))
             is RootConfiguration.Message -> RootChild.MessageRoot(messageComponent(componentContext))
-            is RootConfiguration.Report -> RootChild.ReportRoot(reportComponent(componentContext))
+            is RootConfiguration.Entire -> RootChild.EntireRoot(entireComponent(componentContext))
         }
 
     private fun voteComponent(componentContext: ComponentContext): VoteRootComponent =
@@ -42,14 +43,14 @@ class DefaultRootComponent(
     private fun messageComponent(componentContext: ComponentContext): MessageComponent =
         MessageComponent(componentContext = componentContext)
 
-    private fun reportComponent(componentContext: ComponentContext): ReportComponent =
-        ReportComponent(componentContext = componentContext)
+    private fun entireComponent(componentContext: ComponentContext): EntireRootComponent =
+        DefaultEntireRootComponent(componentContext = componentContext)
 
     override fun onBackClicked(toIndex: Int) {
         navigation.popTo(index = toIndex)
     }
 
     override fun navigateRoot(configuration: RootConfiguration) {
-        navigation.pushToFront(configuration)
+        navigation.bringToFront(configuration)
     }
 }

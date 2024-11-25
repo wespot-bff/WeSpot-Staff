@@ -21,12 +21,15 @@ import com.wespot.staff.designsystem.theme.WeSpotTheme
 import com.wespot.staff.message.MessageScreen
 import com.wespot.staff.navigation.RootComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
-import com.wespot.staff.report.ReportScreen
+import com.wespot.staff.entire.navigation.EntireNavigation
 import com.wespot.staff.vote.navigation.VoteNavigation
-import com.wespot.staff.vote.navigation.VoteRootComponent.VoteChild
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun WeSpotStaffApp(component: RootComponent) {
+fun WeSpotStaffApp(
+    component: RootComponent,
+    viewModel: RootViewModel = koinViewModel(),
+) {
     val childStack by component.stack.subscribeAsState()
 
     WeSpotTheme {
@@ -57,12 +60,13 @@ fun BottomNavigationBar(component: RootComponent, child: RootChild) {
         val isBottomBarVisible = when (targetChild) {
             is RootChild.VoteRoot -> {
                 val voteChild by targetChild.component.stack.subscribeAsState()
-                when (voteChild.active.instance) {
-                    is VoteChild.QuestionScreen, is VoteChild.QuestionWriteScreen, is VoteChild.QuestionConfirmScreen -> false
-                    is VoteChild.VoteHomeScreen -> true
-                }
+                targetChild.component.isBottomBarImpression(voteChild.active.instance)
             }
-            is RootChild.MessageRoot, is RootChild.ReportRoot -> true
+            is RootChild.MessageRoot -> true
+            is RootChild.EntireRoot -> {
+                val entireChild by targetChild.component.stack.subscribeAsState()
+                targetChild.component.isBottomBarImpression(entireChild.active.instance)
+            }
         }
 
         if (isBottomBarVisible) {
@@ -85,9 +89,9 @@ fun AppNavigation(childStack: ChildStack<*, RootChild>) {
         animation = stackAnimation(fade()),
     ) {
         when (val child = it.instance) {
-            is RootChild.VoteRoot -> VoteNavigation(child.component)
+            is RootChild.VoteRoot -> VoteNavigation(component = child.component)
             is RootChild.MessageRoot -> MessageScreen(component = child.component)
-            is RootChild.ReportRoot -> ReportScreen(component = child.component)
+            is RootChild.EntireRoot -> EntireNavigation(component = child.component)
         }
     }
 }
