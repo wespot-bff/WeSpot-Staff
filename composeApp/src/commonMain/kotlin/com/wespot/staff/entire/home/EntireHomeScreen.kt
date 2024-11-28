@@ -5,10 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.wespot.staff.component.NavigationListItem
@@ -17,7 +21,12 @@ import com.wespot.staff.designsystem.theme.WeSpotThemeManager
 
 @Composable
 fun EntireHomeScreen(component: EntireHomeComponent) {
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
@@ -46,6 +55,12 @@ fun EntireHomeScreen(component: EntireHomeComponent) {
                 text = "알림 생성",
                 onClick = component::navigateToNotificationScreen
             )
+        }
+
+        LaunchedEffect(Unit) {
+            component.toastMessage?.let {
+                snackbarHostState.showSnackbar(it)
+            }
         }
     }
 }

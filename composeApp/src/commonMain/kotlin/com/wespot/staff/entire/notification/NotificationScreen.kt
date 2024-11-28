@@ -21,10 +21,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wespot.staff.common.clickableSingle
 import com.wespot.staff.common.collectEvent
 import com.wespot.staff.designsystem.component.WSButton
+import com.wespot.staff.designsystem.component.WSLoadingAnimation
 import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
-import com.wespot.staff.designsystem.theme.Gray600
 import com.wespot.staff.designsystem.theme.StaticTypography
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
 import org.koin.compose.viewmodel.koinViewModel
@@ -43,7 +43,7 @@ fun NotificationScreen(
     viewModel.uiEvent.collectEvent {
         when (it) {
             NotificationUiEvent.NavigateToHome -> {
-                component.navigateToHomeScreen()
+                component.navigateToHomeScreen("알림 생성 완료")
             }
 
             is NotificationUiEvent.ShowErrorMessage -> {
@@ -70,9 +70,13 @@ fun NotificationScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding),
+                .padding(innerPadding)
         ) {
-            Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .weight(1f)
+            ) {
                 Text(
                     text = "알림 생성",
                     style = StaticTypography().header1,
@@ -106,11 +110,7 @@ fun NotificationScreen(
                     isBody = true,
                     onValueChange = viewModel::setBody,
                 )
-
-                Spacer(modifier = Modifier.padding(32.dp))
             }
-
-            Spacer(modifier = Modifier.weight(1f))
 
             WSButton(
                 text = "알림 생성하기",
@@ -118,6 +118,10 @@ fun NotificationScreen(
                 content = { it() },
             )
         }
+    }
+
+    if (state.isLoading) {
+        WSLoadingAnimation()
     }
 }
 
