@@ -36,7 +36,7 @@ class DefaultEntireRootComponent(
         childStack(
             source = navigation,
             serializer = EntireConfiguration.serializer(),
-            initialConfiguration = EntireConfiguration.EntireHome,
+            initialConfiguration = EntireConfiguration.EntireHome(),
             handleBackButton = true,
             childFactory = ::createChild,
         )
@@ -50,14 +50,15 @@ class DefaultEntireRootComponent(
 
     private fun createChild(config: EntireConfiguration, componentContext: ComponentContext): EntireChild =
         when (config) {
-            is EntireConfiguration.EntireHome -> EntireChild.EntireHomeScreen(entireHomeComponent(componentContext))
+            is EntireConfiguration.EntireHome -> EntireChild.EntireHomeScreen(entireHomeComponent(componentContext, config))
             is EntireConfiguration.Configuration -> EntireChild.ConfigurationScreen(configurationComponent(componentContext))
             is EntireConfiguration.Notification -> EntireChild.NotificationScreen(notificationComponent(componentContext))
         }
 
-    private fun entireHomeComponent(componentContext: ComponentContext) =
+    private fun entireHomeComponent(componentContext: ComponentContext, config: EntireConfiguration.EntireHome) =
         EntireHomeComponent(
             componentContext = componentContext,
+            toastMessage = config.toastMessage,
             navigateToNotification = {
                 navigation.pushToFront(EntireConfiguration.Notification)
             },
@@ -77,14 +78,14 @@ class DefaultEntireRootComponent(
             componentContext = componentContext,
             popBackStack = ::popBackStack,
             navigateToHome = {
-                navigation.pushToFront(EntireConfiguration.EntireHome)
+                navigation.pushToFront(EntireConfiguration.EntireHome(it))
             },
         )
 
     @Serializable
     sealed interface EntireConfiguration {
         @Serializable
-        data object EntireHome : EntireConfiguration
+        data class EntireHome(val toastMessage: String? = null) : EntireConfiguration
 
         @Serializable
         data object Configuration : EntireConfiguration

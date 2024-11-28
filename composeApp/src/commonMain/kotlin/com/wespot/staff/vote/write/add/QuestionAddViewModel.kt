@@ -60,6 +60,12 @@ class QuestionAddViewModel(
             val questionList = _uiState.value.questionList
                 .filter { it.isNotBlank() }
                 .map { it.trim() }
+
+            if (questionList.isEmpty()) {
+                _uiEvent.send(QuestionAddUiEvent.ShowToast("질문 목록이 비어있어요."))
+            }
+
+            _uiState.update { it.copy(isLoading = true) }
             repository.postVoteQuestions(questionList)
                 .onSuccess {
                     clearState()
@@ -67,6 +73,9 @@ class QuestionAddViewModel(
                 }
                 .onFailure { exception ->
                     _uiEvent.send(QuestionAddUiEvent.ShowToast("${exception.message} 문제가 발생했어요."))
+                }
+                .also {
+                    _uiState.update { it.copy(isLoading = false) }
                 }
         }
     }

@@ -24,6 +24,7 @@ import com.wespot.staff.common.clickableSingle
 import com.wespot.staff.common.collectEvent
 import com.wespot.staff.designsystem.component.WSButton
 import com.wespot.staff.designsystem.component.WSButtonType
+import com.wespot.staff.designsystem.component.WSLoadingAnimation
 import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.StaticTypography
@@ -102,6 +103,10 @@ fun QuestionAddScreen(
             onClick = viewModel::submitQuestionList,
             content = { it() },
         )
+    }
+
+    if (state.isLoading) {
+        WSLoadingAnimation()
     }
 
     LaunchedEffect(Unit) {

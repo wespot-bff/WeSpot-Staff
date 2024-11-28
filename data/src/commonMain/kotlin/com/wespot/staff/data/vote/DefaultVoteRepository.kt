@@ -28,7 +28,7 @@ public class DefaultVoteRepository(
         voteApi.getVoteQuestions().mapCatching {
             it.voteOptions.map { list ->
                 list.toVoteQuestion()
-            }
+            }.reversed()
         }.onSuccess { voteQuestions ->
             refreshVoteQuestions(voteQuestions)
         }.recoverCatching {

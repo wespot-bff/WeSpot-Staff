@@ -8,4 +8,5 @@ data class QuestionUiState (
     val clickedQuestion: VoteQuestion = VoteQuestion(),
     val searchInput: String = "",
     val isSearchState: Boolean = false,
+    val isLoading: Boolean = false,
 )
