@@ -44,6 +44,7 @@ class NotificationViewModel(
                 _uiEvent.send(NotificationUiEvent.ShowErrorMessage("제목과 내용을 모두 작성해주세요."))
             }
 
+            _uiState.update { it.copy(isLoading = true) }
             repository.publishNotification(
                 content = NotificationContent(
                     title = _uiState.value.title,
@@ -53,6 +54,8 @@ class NotificationViewModel(
                 _uiEvent.send(NotificationUiEvent.NavigateToHome)
             }.onFailure { exception ->
                 _uiEvent.send(NotificationUiEvent.ShowErrorMessage("${exception.message} 문제가 발생했어요."))
+            }.also {
+                _uiState.update { it.copy(isLoading = false) }
             }
         }
     }
