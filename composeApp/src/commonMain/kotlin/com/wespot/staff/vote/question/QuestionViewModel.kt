@@ -51,28 +51,6 @@ class QuestionViewModel(
         }
     }
 
-    fun setVoteQuestionInput(question: String) {
-        _uiState.update { it.copy(questionInput = question) }
-    }
-
-    fun setQuestionClickedState(question: VoteQuestion) {
-        _uiState.update {
-            it.copy(
-                clickedQuestion = question,
-                questionInput = question.content,
-            )
-        }
-    }
-
-    fun clearQuestionClickedState() {
-        _uiState.update {
-            it.copy(
-                clickedQuestion = VoteQuestion(),
-                questionInput = "",
-            )
-        }
-    }
-
     private fun observeSearchInput() {
         viewModelScope.launch(Dispatchers.Default) {
             searchInput
@@ -84,6 +62,19 @@ class QuestionViewModel(
                         _uiState.update { it.copy(questionList = list) }
                     }
                 }
+        }
+    }
+
+    fun setVoteQuestionInput(question: String) {
+        _uiState.update { it.copy(questionInput = question) }
+    }
+
+    fun setQuestionClickedState(question: VoteQuestion) {
+        _uiState.update {
+            it.copy(
+                clickedQuestion = question,
+                questionInput = question.content,
+            )
         }
     }
 
@@ -110,12 +101,16 @@ class QuestionViewModel(
                 return@launch
             }
 
+            _uiState.update { it.copy(isLoading = true) }
             voteRepository.editVoteQuestion(id, input)
                 .onSuccess {
-                    _uiState.update { it.copy(questionInput = "") }
+                    clearQuestionClickedState()
+                    getVoteQuestions()
                     _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문이 수정되었습니다"))
                 }.onFailure {
                     _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 수정에 실패하였습니다"))
+                }.also {
+                    _uiState.update { it.copy(isLoading = false) }
                 }
         }
     }
@@ -127,13 +122,26 @@ class QuestionViewModel(
                 return@launch
             }
 
+            _uiState.update { it.copy(isLoading = true) }
             voteRepository.postVoteQuestion(question = input)
                 .onSuccess {
-                  _uiState.update { it.copy(questionInput = "") }
+                    clearQuestionClickedState()
+                    getVoteQuestions()
                     _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문이 추가되었습니다"))
                 }.onFailure {
                     _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 추가에 실패하였습니다"))
+                }.also {
+                    _uiState.update { it.copy(isLoading = false) }
                 }
+        }
+    }
+
+    fun clearQuestionClickedState() {
+        _uiState.update {
+            it.copy(
+                clickedQuestion = VoteQuestion(),
+                questionInput = "",
+            )
         }
     }
 }

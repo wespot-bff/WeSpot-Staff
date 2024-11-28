@@ -33,6 +33,7 @@ import com.wespot.staff.common.clickableSingle
 import com.wespot.staff.common.collectEvent
 import com.wespot.staff.designsystem.component.WSButton
 import com.wespot.staff.designsystem.component.WSListItem
+import com.wespot.staff.designsystem.component.WSLoadingAnimation
 import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
@@ -52,6 +53,18 @@ fun QuestionScreen(
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    viewModel.uiEvent.collectEvent {
+        when (it) {
+            is QuestionUiEvent.QuestionPostEvent -> {
+                snackbarHostState.showSnackbar(message = it.message)
+            }
+
+            is QuestionUiEvent.QuestionLoadFailedEvent -> {
+                snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
+            }
+        }
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -76,10 +89,7 @@ fun QuestionScreen(
         },
         modifier = Modifier
             .fillMaxSize()
-            .clickableSingle {
-                keyboardController?.hide()
-                viewModel.clearQuestionClickedState()
-            },
+            .clickableSingle { keyboardController?.hide() },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -160,15 +170,7 @@ fun QuestionScreen(
         }
     }
 
-    viewModel.uiEvent.collectEvent {
-        when (it) {
-            is QuestionUiEvent.QuestionPostEvent -> {
-                snackbarHostState.showSnackbar(message = it.message)
-            }
-
-            is QuestionUiEvent.QuestionLoadFailedEvent -> {
-                snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
-            }
-        }
+    if (state.isLoading) {
+        WSLoadingAnimation()
     }
 }
