@@ -200,3 +200,4 @@ fabric.properties
 /captures
 .cxx
 .kotlin
+iosApp/iosApp/GoogleService-Info.plist
