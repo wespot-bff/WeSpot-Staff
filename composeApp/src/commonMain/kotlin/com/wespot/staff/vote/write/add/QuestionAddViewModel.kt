@@ -63,6 +63,7 @@ class QuestionAddViewModel(
 
             if (questionList.isEmpty()) {
                 _uiEvent.send(QuestionAddUiEvent.ShowToast("질문 목록이 비어있어요."))
+                return@launch
             }
 
             _uiState.update { it.copy(isLoading = true) }
