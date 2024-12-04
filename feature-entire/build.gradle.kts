@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 kotlin {
@@ -20,7 +21,7 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
-            baseName = "designsystem"
+            baseName = "feature-entire"
             isStatic = true
         }
     }
@@ -28,7 +29,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(projects.common)
+            implementation(projects.designsystem)
+            implementation(projects.domain)
 
+            // Compose
             implementation(compose.runtime)
             implementation(compose.foundation)
             implementation(compose.material)
@@ -36,20 +40,27 @@ kotlin {
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(compose.material3)
-            implementation(compose.materialIconsExtended)
+
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.lifecycle.runtime.compose)
+            api(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+            implementation(libs.kermit)
+
+            implementation(libs.decompose)
+            implementation(libs.decompose.extensions)
+            implementation(libs.kotlin.serialization.json)
             implementation(libs.kotlinx.collections.immutable)
         }
     }
 }
 
 android {
-    namespace = "com.wespot.staff.designsystem"
+    namespace = "com.wespot.staff.entire"
     compileSdk = 34
     defaultConfig {
-        minSdk = 26
-    }
-    buildFeatures {
-        compose = true
+        minSdk = 24
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

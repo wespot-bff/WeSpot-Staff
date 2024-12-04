@@ -38,6 +38,7 @@ kotlin-firebase = "2.1.0"
 firebase-common = "21.0.0"
 google-services = "4.4.2"
 crashlytics = "3.0.2"
+kotlinVersion = "1.9.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -105,3 +106,4 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 build-config = { id = "com.github.gmazzo.buildconfig", version.ref = "build-config" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics"}
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlinVersion" }
