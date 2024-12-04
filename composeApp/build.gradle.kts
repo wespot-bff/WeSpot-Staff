@@ -44,6 +44,9 @@ kotlin {
             implementation(projects.designsystem)
             implementation(projects.domain)
             implementation(projects.data)
+            implementation(projects.featureEntire)
+            implementation(projects.featureVote)
+            implementation(projects.featureReport)
 
             // Compose
             implementation(compose.runtime)

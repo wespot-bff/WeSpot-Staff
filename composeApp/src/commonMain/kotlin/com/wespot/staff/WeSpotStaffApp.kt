@@ -18,10 +18,10 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.wespot.staff.designsystem.theme.WeSpotTheme
-import com.wespot.staff.message.MessageScreen
 import com.wespot.staff.navigation.RootComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.entire.navigation.EntireNavigation
+import com.wespot.staff.report.ReportScreen
 import com.wespot.staff.vote.navigation.VoteNavigation
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -62,7 +62,7 @@ fun BottomNavigationBar(component: RootComponent, child: RootChild) {
                 val voteChild by targetChild.component.stack.subscribeAsState()
                 targetChild.component.isBottomBarImpression(voteChild.active.instance)
             }
-            is RootChild.MessageRoot -> true
+            is RootChild.ReportRoot -> true
             is RootChild.EntireRoot -> {
                 val entireChild by targetChild.component.stack.subscribeAsState()
                 targetChild.component.isBottomBarImpression(entireChild.active.instance)
@@ -90,7 +90,7 @@ fun AppNavigation(childStack: ChildStack<*, RootChild>) {
     ) {
         when (val child = it.instance) {
             is RootChild.VoteRoot -> VoteNavigation(component = child.component)
-            is RootChild.MessageRoot -> MessageScreen(component = child.component)
+            is RootChild.ReportRoot -> ReportScreen(component = child.component)
             is RootChild.EntireRoot -> EntireNavigation(component = child.component)
         }
     }
