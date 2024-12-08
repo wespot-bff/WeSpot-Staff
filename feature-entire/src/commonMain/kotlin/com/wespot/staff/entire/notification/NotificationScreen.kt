@@ -19,7 +19,7 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wespot.staff.common.extensions.clickableSingle
-import com.wespot.staff.common.extensions.collectEvent
+import com.wespot.staff.common.extensions.collectSideEffect
 import com.wespot.staff.designsystem.component.WSButton
 import com.wespot.staff.designsystem.component.WSLoadingAnimation
 import com.wespot.staff.designsystem.component.WSTextField
@@ -40,13 +40,13 @@ fun NotificationScreen(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    viewModel.uiEvent.collectEvent {
+    viewModel.sideEffect.collectSideEffect {
         when (it) {
-            NotificationUiEvent.NavigateToHome -> {
+            NotificationSideEffect.NavigateToHome -> {
                 component.navigateToHomeScreen("알림 생성 완료")
             }
 
-            is NotificationUiEvent.ShowErrorMessage -> {
+            is NotificationSideEffect.ShowErrorMessage -> {
                 snackbarHostState.showSnackbar(it.message)
             }
         }
