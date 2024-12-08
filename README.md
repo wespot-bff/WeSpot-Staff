@@ -11,9 +11,9 @@
 
 ## 🌖 Tech Stack 
 
-| Plaform | KotlinMultiPlaform, ComposeMultiPlaform |
+| Platform | KotlinMultiPlaform, ComposeMultiPlaform |
 |:---|:---|
-| Architecture | CleanArchitecture |
+| Architecture | CleanArchitecture, MVI, MVVM |
 | Data | Ktor(Okhttp, Darwin), Kotlin Serialization, DataStore |
 | Presentation | Compose, Decompose |
 | Dependency Injection | Koin MultiPlaform |
