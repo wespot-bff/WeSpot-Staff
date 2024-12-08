@@ -17,7 +17,7 @@
 | Data | Ktor(Okhttp, Darwin), Kotlin Serialization, DataStore |
 | Presentation | Compose, Decompose |
 | Dependency Injection | Koin MultiPlaform |
-| Third Party | Kermit, Kotlin Firebase, MultiPlatform BuildConfig |
+| Third Party | [Kermit](https://github.com/touchlab/Kermit), [Kotlin Firebase](https://github.com/GitLiveApp/firebase-kotlin-sdk), [Gradle BuildConfig](https://github.com/gmazzo/gradle-buildconfig-plugin) |
 
 ## 🌗 Feature
 
