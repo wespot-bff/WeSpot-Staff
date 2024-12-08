@@ -10,7 +10,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun <T> Flow<T>.collectEvent(
+fun <T> Flow<T>.collectSideEffect(
     lifecycleState: Lifecycle.State = Lifecycle.State.STARTED,
     event: (suspend (sideEffect: T) -> Unit)
 ) {
@@ -19,7 +19,7 @@ fun <T> Flow<T>.collectEvent(
 
     LaunchedEffect(this, lifecycleOwner) {
         lifecycleOwner.lifecycle.repeatOnLifecycle(lifecycleState) {
-            this@collectEvent.collect { callback(it) }
+            this@collectSideEffect.collect { callback(it) }
         }
     }
 }

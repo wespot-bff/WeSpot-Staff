@@ -30,7 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wespot.staff.common.extensions.clickableSingle
-import com.wespot.staff.common.extensions.collectEvent
+import com.wespot.staff.common.extensions.collectSideEffect
 import com.wespot.staff.designsystem.component.WSButton
 import com.wespot.staff.designsystem.component.WSListItem
 import com.wespot.staff.designsystem.component.WSLoadingAnimation
@@ -54,13 +54,13 @@ fun QuestionScreen(
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    viewModel.uiEvent.collectEvent {
+    viewModel.sideEffect.collectSideEffect {
         when (it) {
-            is QuestionUiEvent.QuestionPostEvent -> {
+            is QuestionSideEffect.QuestionPostEvent -> {
                 snackbarHostState.showSnackbar(message = it.message)
             }
 
-            is QuestionUiEvent.QuestionLoadFailedEvent -> {
+            is QuestionSideEffect.QuestionLoadFailedEvent -> {
                 snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
             }
         }

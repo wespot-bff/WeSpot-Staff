@@ -12,14 +12,17 @@ class DefaultRemoteConfigRepository(
         dataSource.startRemoteConfig()
 
     override fun fetchFromRemoteConfig(): List<RemoteConfig> =
-        /** 일치하지 않는 값을 받은 경우 null을 반환하여 mapNotNull에서 제외된다. */
+        /** 등록되어 있지 않은 RemoteConfig 값은 Description이 생략된다. */
         dataSource.fetchFromRemoteConfig()
             .mapNotNull { entry ->
-                runCatching {
-                    RemoteConfig(
-                        key = RemoteConfigKey.valueOf(entry.key),
-                        value = entry.value.asString()
-                    )
-                }.getOrNull()
+                RemoteConfig(
+                    key = entry.key,
+                    description = getRemoteConfigDescription(entry.key),
+                    value = entry.value.asString(),
+                )
             }
+
+    private fun getRemoteConfigDescription(key: String) = runCatching {
+        RemoteConfigKey.valueOf(key).toDescription()
+    }.getOrDefault("")
 }

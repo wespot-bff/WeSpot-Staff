@@ -1,18 +1,10 @@
 plugins {
-    alias(libs.plugins.kotlinMultiplatform)
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.wespot.kmp)
+    alias(libs.plugins.wespot.android.library)
+    alias(libs.plugins.wespot.kotlin.serialization)
 }
 
 kotlin {
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-        }
-    }
-    
     listOf(
         iosX64(),
         iosArm64(),
@@ -26,7 +18,6 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.kotlin.serialization.json)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.coroutines)
         }
@@ -35,12 +26,4 @@ kotlin {
 
 android {
     namespace = "com.wespot.staff.domain"
-    compileSdk = 34
-    defaultConfig {
-        minSdk = 26
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
 }

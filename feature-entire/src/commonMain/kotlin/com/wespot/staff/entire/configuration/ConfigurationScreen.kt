@@ -44,9 +44,12 @@ fun ConfigurationScreen(
                 items = state.remoteConfigList,
                 key = { item -> item.key },
             ) { item ->
+                /** Description이 비어있으면 key로만 구성한다. */
                 WSListItem(
-                    title = item.key.toDescription(),
-                    subTitle = item.value,
+                    title = item.key,
+                    subTitle = if (item.description.isNotBlank()) {
+                        "${item.description}\n${item.value}"
+                    } else item.value,
                     selected = false,
                     isMultiLine = true,
                     onClick = { },

@@ -1,52 +1,40 @@
 package com.wespot.staff.vote.question
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.wespot.staff.domain.vote.VoteQuestion
 import com.wespot.staff.domain.vote.VoteRepository
-import co.touchlab.kermit.Logger
+import com.wespot.staff.common.base.BaseViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class QuestionViewModel(
     private val voteRepository: VoteRepository,
-): ViewModel() {
-    private val _uiState = MutableStateFlow(QuestionUiState())
-    val uiState = _uiState
-        .onStart {
-            getVoteQuestions()
-            observeSearchInput()
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5000L),
-            initialValue = _uiState.value
-        )
+): BaseViewModel<QuestionUiState, QuestionSideEffect>() {
+    override fun createInitialState(): QuestionUiState = QuestionUiState()
 
     private val searchInput: MutableStateFlow<String> = MutableStateFlow("")
     private var voteQuestions: List<VoteQuestion> = listOf()
 
-    private val _uiEvent = Channel<QuestionUiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
+    init {
+        getVoteQuestions()
+        observeSearchInput()
+    }
 
     private fun getVoteQuestions() {
         viewModelScope.launch {
+            reduce { copy(isLoading = true) }
             voteRepository.getVoteQuestions()
                 .onSuccess { questionList ->
-                    _uiState.update { it.copy(questionList = questionList) }
+                    reduce { copy(questionList = questionList) }
                     voteQuestions = questionList
                 }
                 .onFailure { exception ->
-                    _uiEvent.send(QuestionUiEvent.QuestionLoadFailedEvent)
-                    Logger.e("HomeViewModel", exception)
+                    postSideEffect(QuestionSideEffect.QuestionLoadFailedEvent)
+                }.also {
+                    reduce { copy(isLoading = false) }
                 }
         }
     }
@@ -57,21 +45,21 @@ class QuestionViewModel(
                 .debounce(500)
                 .distinctUntilChanged()
                 .collect { keyword ->
-                    if (_uiState.value.isSearchState) {
+                    if (state.isSearchState) {
                         val list = voteQuestions.filter { keyword in it.content }
-                        _uiState.update { it.copy(questionList = list) }
+                        reduce { copy(questionList = list) }
                     }
                 }
         }
     }
 
     fun setVoteQuestionInput(question: String) {
-        _uiState.update { it.copy(questionInput = question) }
+        reduce { copy(questionInput = question) }
     }
 
     fun setQuestionClickedState(question: VoteQuestion) {
-        _uiState.update {
-            it.copy(
+        reduce {
+            copy(
                 clickedQuestion = question,
                 questionInput = question.content,
             )
@@ -80,65 +68,65 @@ class QuestionViewModel(
 
     fun setSearchInput(keyword: String) {
         searchInput.value = keyword
-        _uiState.update { it.copy(searchInput = keyword) }
+        reduce { copy(searchInput = keyword) }
     }
 
     fun toggleSearchState() {
-        val previousState = _uiState.value.isSearchState
+        val previousState = state.isSearchState
         if (previousState) {
             setSearchInput("")
-            _uiState.update { it.copy(questionList = voteQuestions) }
+            reduce { copy(questionList = voteQuestions) }
         }
 
-        _uiState.update { it.copy(isSearchState = previousState.not()) }
+        reduce { copy(isSearchState = previousState.not()) }
     }
 
     fun editVoteQuestion() {
         viewModelScope.launch {
-            val id = _uiState.value.clickedQuestion.id
-            val input = _uiState.value.questionInput.ifEmpty {
-                _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 내용을 입력해주세요."))
+            val id = state.clickedQuestion.id
+            val input = state.questionInput.ifEmpty {
+                postSideEffect(QuestionSideEffect.QuestionPostEvent("질문 내용을 입력해주세요."))
                 return@launch
             }
 
-            _uiState.update { it.copy(isLoading = true) }
+            reduce { copy(isLoading = true) }
             voteRepository.editVoteQuestion(id, input)
                 .onSuccess {
                     clearQuestionClickedState()
                     getVoteQuestions()
-                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문이 수정되었습니다"))
+                    postSideEffect(QuestionSideEffect.QuestionPostEvent("질문이 수정되었습니다"))
                 }.onFailure {
-                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 수정에 실패하였습니다"))
+                    postSideEffect(QuestionSideEffect.QuestionPostEvent("질문 수정에 실패하였습니다"))
                 }.also {
-                    _uiState.update { it.copy(isLoading = false) }
+                    reduce { copy(isLoading = false) }
                 }
         }
     }
 
     fun postVoteQuestion() {
         viewModelScope.launch {
-            val input = _uiState.value.questionInput.ifEmpty {
-                _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 내용을 입력해주세요."))
+            val input = state.questionInput.ifEmpty {
+                postSideEffect(QuestionSideEffect.QuestionPostEvent("질문 내용을 입력해주세요."))
                 return@launch
             }
 
-            _uiState.update { it.copy(isLoading = true) }
+            reduce { copy(isLoading = true) }
             voteRepository.postVoteQuestion(question = input)
                 .onSuccess {
                     clearQuestionClickedState()
                     getVoteQuestions()
-                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문이 추가되었습니다"))
+                    postSideEffect(QuestionSideEffect.QuestionPostEvent("질문이 추가되었습니다"))
                 }.onFailure {
-                    _uiEvent.send(QuestionUiEvent.QuestionPostEvent("질문 추가에 실패하였습니다"))
+                    postSideEffect(QuestionSideEffect.QuestionPostEvent("질문 추가에 실패하였습니다"))
                 }.also {
-                    _uiState.update { it.copy(isLoading = false) }
+                    reduce { copy(isLoading = false) }
                 }
         }
     }
 
     fun clearQuestionClickedState() {
-        _uiState.update {
-            it.copy(
+        reduce {
+            copy(
                 clickedQuestion = VoteQuestion(),
                 questionInput = "",
             )

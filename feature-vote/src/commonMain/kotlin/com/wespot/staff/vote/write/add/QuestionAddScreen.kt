@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.wespot.staff.common.extensions.clickableSingle
-import com.wespot.staff.common.extensions.collectEvent
+import com.wespot.staff.common.extensions.collectSideEffect
 import com.wespot.staff.designsystem.component.WSButton
 import com.wespot.staff.designsystem.component.WSButtonType
 import com.wespot.staff.designsystem.component.WSLoadingAnimation
@@ -44,11 +44,11 @@ fun QuestionAddScreen(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    viewModel.uiEvent.collectEvent {
+    viewModel.sideEffect.collectSideEffect {
         when (it) {
-            QuestionAddUiEvent.NavigateToQuestionScreen -> navigateToQuestionScreen("작성 완료")
+            QuestionAddSideEffect.NavigateToQuestionScreen -> navigateToQuestionScreen("작성 완료")
 
-            is QuestionAddUiEvent.ShowToast -> { showToast(it.message) }
+            is QuestionAddSideEffect.ShowToast -> { showToast(it.message) }
         }
     }
 
