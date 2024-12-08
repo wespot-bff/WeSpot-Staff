@@ -9,7 +9,7 @@ enum class RemoteConfigKey {
     WESPOT_INSTAGRAM_URL,
     USER_OPINION_GOOGLE_FORM_URL,
     ANDROID_LATEST_VERSION,
-    ANDROID_UPDATE_TYPE,
+    ANDROID_VERSION_UPDATE_TYPE,
     RESEARCH_PARTICIPATION_GOOGLE_FORM_URL,
     WESPOT_MAKERS_URL,
     PROFILE_CHANGE_GOOGLE_FORM_URL,
@@ -26,7 +26,7 @@ enum class RemoteConfigKey {
             MIN_VERSION -> "안드로이드 최소 지원 버전"
             BASE_URL -> "API 기본 URL"
             ANDROID_LATEST_VERSION -> "안드로이드 최신 지원 버전"
-            ANDROID_UPDATE_TYPE -> "안드로이드 업데이트 유형"
+            ANDROID_VERSION_UPDATE_TYPE -> "안드로이드 버전 업데이트 유형 : USABILITY_IMPROVEMENT / NEW_FEATURE_ADDED"
             MOCK_BASE_URL -> "모의 API를 위한 기본 URL"
             VOTE_QUESTION_GOOGLE_FORM_URL -> "투표 질문 Google 폼 URL"
             WESPOT_KAKAO_CHANNEL_URL -> "WeSpot 카카오 채널 URL"
