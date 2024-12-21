@@ -7,6 +7,7 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.wespot.staff.entire.configuration.ConfigurationScreen
+import com.wespot.staff.entire.configuration.add.ConfigurationAddScreen
 import com.wespot.staff.entire.home.EntireHomeScreen
 import com.wespot.staff.entire.navigation.EntireRootComponent.EntireChild
 import com.wespot.staff.entire.notification.NotificationScreen
@@ -21,6 +22,7 @@ fun EntireNavigation(component: EntireRootComponent) {
         when (val child = it.instance) {
             is EntireChild.EntireHomeScreen -> EntireHomeScreen(child.component)
             is EntireChild.ConfigurationScreen -> ConfigurationScreen(child.component)
+            is EntireChild.ConfigurationAddScreen -> ConfigurationAddScreen(child.component)
             is EntireChild.NotificationScreen -> NotificationScreen(child.component)
         }
     }

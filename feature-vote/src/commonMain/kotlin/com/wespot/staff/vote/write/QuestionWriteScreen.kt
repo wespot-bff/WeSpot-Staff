@@ -100,5 +100,5 @@ fun QuestionWriteScreen(
     }
 }
 
-const val QUESTION_ADD_SCREEN_INDEX = 0
-const val QUESTION_PARSE_SCREEN_INDEX = 1
+private const val QUESTION_ADD_SCREEN_INDEX = 0
+private const val QUESTION_PARSE_SCREEN_INDEX = 1

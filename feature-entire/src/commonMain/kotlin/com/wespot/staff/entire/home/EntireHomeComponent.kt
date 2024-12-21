@@ -7,8 +7,11 @@ class EntireHomeComponent(
     val toastMessage: String? = null,
     private val navigateToConfiguration: () -> Unit,
     private val navigateToNotification: () -> Unit,
+    private val navigateToAddConfiguration: () -> Unit,
 ): ComponentContext by componentContext {
     fun navigateToConfigurationScreen() = navigateToConfiguration()
+
+    fun navigateToAddConfigurationScreen() = navigateToAddConfiguration()
 
     fun navigateToNotificationScreen() = navigateToNotification()
 }

@@ -45,6 +45,11 @@ fun EntireHomeScreen(component: EntireHomeComponent) {
                 onClick = component::navigateToConfigurationScreen
             )
 
+            WSNavigationListItem(
+                text = "컨피그 값 등록",
+                onClick = component::navigateToAddConfigurationScreen
+            )
+
             HorizontalDivider(
                 modifier = Modifier.fillMaxWidth(),
                 thickness = 1.dp,

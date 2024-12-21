@@ -54,8 +54,8 @@ android {
 
     defaultConfig {
         applicationId = "com.wespot.staff"
-        versionCode = 5
-        versionName = "1.1.3"
+        versionCode = 6
+        versionName = "1.2.0"
     }
     packaging {
         resources {

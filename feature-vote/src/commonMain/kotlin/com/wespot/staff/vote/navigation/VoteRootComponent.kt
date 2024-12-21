@@ -5,8 +5,8 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
-import com.arkivanov.decompose.router.stack.pushToFront
 import com.arkivanov.decompose.value.Value
+import com.wespot.staff.common.extensions.navigate
 import com.wespot.staff.domain.vote.VoteQuestionContent
 import com.wespot.staff.vote.write.QuestionWriteComponent
 import com.wespot.staff.vote.home.VoteHomeComponent
@@ -64,10 +64,10 @@ class DefaultVoteRootComponent(
         VoteHomeComponent(
             componentContext = componentContext,
             navigateToQuestion = {
-                navigation.pushToFront(VoteConfiguration.Question())
+                navigation.navigate(VoteConfiguration.Question())
             },
             navigateToQuestionWrite = {
-                navigation.pushToFront(VoteConfiguration.QuestionWrite)
+                navigation.navigate(VoteConfiguration.QuestionWrite)
             }
         )
 
@@ -82,13 +82,13 @@ class DefaultVoteRootComponent(
             componentContext = componentContext,
             popBackStack = ::popBackStack,
             navigateToQuestionConfirm = {
-                navigation.pushToFront(
+                navigation.navigate(
                     VoteConfiguration.QuestionConfirm(
                         it
                     )
                 )
             },
-            navigateToQuestion = { navigation.pushToFront(VoteConfiguration.Question(it)) },
+            navigateToQuestion = { navigation.navigate(VoteConfiguration.Question(it)) },
         )
 
     private fun questionConfirmComponent(
@@ -99,7 +99,7 @@ class DefaultVoteRootComponent(
             componentContext = componentContext,
             questionList = config.questionList,
             popBackStack = ::popBackStack,
-            navigateToQuestion = { navigation.pushToFront(VoteConfiguration.Question(it)) },
+            navigateToQuestion = { navigation.navigate(VoteConfiguration.Question(it)) },
         )
 
     @Serializable
