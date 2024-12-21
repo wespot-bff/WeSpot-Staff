@@ -21,6 +21,8 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.androidx.lifecycle.runtime.compose)
             implementation(libs.androidx.lifecycle.viewmodel)
+
+            implementation(libs.decompose)
         }
     }
 }
