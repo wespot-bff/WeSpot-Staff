@@ -19,12 +19,16 @@ import com.arkivanov.decompose.extensions.compose.stack.animation.fade
 import com.arkivanov.decompose.extensions.compose.stack.animation.stackAnimation
 import com.arkivanov.decompose.extensions.compose.subscribeAsState
 import com.arkivanov.decompose.router.stack.ChildStack
+import com.wespot.staff.common.extensions.collectSideEffect
 import com.wespot.staff.designsystem.theme.WeSpotTheme
-import com.wespot.staff.designsystem.util.LocalSnackbarHostState
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
+import com.wespot.staff.designsystem.util.snackbar.SnackbarHost
 import com.wespot.staff.navigation.RootComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.entire.navigation.EntireNavigation
 import com.wespot.staff.report.ReportScreen
+import com.wespot.staff.state.RootSideEffect
+import com.wespot.staff.state.RootViewModel
 import com.wespot.staff.vote.navigation.VoteNavigation
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -37,10 +41,23 @@ fun WeSpotStaffApp(
 
     WeSpotTheme {
         val snackbarHostState = remember { SnackbarHostState() }
+        val snackbarHost = object: SnackbarHost {
+            override fun showSnackbar(message: String) {
+                viewModel.handleShowSnackbarEvent(message)
+            }
+        }
+
+        viewModel.sideEffect.collectSideEffect {
+            when (it) {
+                is RootSideEffect.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(it.message)
+                }
+            }
+        }
 
         CompositionLocalProvider(
             values = arrayOf(
-                LocalSnackbarHostState provides snackbarHostState
+                LocalSnackbarHost provides snackbarHost
             ),
         ) {
             Scaffold(

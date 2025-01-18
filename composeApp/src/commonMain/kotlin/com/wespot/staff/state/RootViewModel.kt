@@ -1,13 +1,15 @@
-package com.wespot.staff
+package com.wespot.staff.state
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.wespot.staff.common.base.BaseViewModel
 import com.wespot.staff.domain.config.RemoteConfigRepository
 import kotlinx.coroutines.launch
 
 class RootViewModel(
     private val remoteConfigRepository: RemoteConfigRepository,
-): ViewModel() {
+): BaseViewModel<RootUiState, RootSideEffect>() {
+    override fun createInitialState(): RootUiState = RootUiState()
+
     init {
         startRemoteConfig()
     }
@@ -16,5 +18,9 @@ class RootViewModel(
         viewModelScope.launch {
             remoteConfigRepository.startRemoteConfig()
         }
+    }
+
+    fun handleShowSnackbarEvent(message: String) {
+        postSideEffect(RootSideEffect.ShowSnackbar(message))
     }
 }
