@@ -5,9 +5,9 @@ import com.arkivanov.decompose.ComponentContext
 class NotificationComponent(
     componentContext: ComponentContext,
     private val popBackStack: () -> Unit,
-    private val navigateToHome: (String) -> Unit,
+    private val popUpToHome: () -> Unit,
 ): ComponentContext by componentContext {
     fun navigateUp() = popBackStack()
 
-    fun navigateToHomeScreen(toastMessage: String) = navigateToHome(toastMessage)
+    fun navigateToHomeScreen() = popUpToHome()
 }
