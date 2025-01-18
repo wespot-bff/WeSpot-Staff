@@ -6,14 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
@@ -27,6 +24,7 @@ import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.StaticTypography
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +33,7 @@ fun NotificationScreen(
     component: NotificationComponent,
     viewModel: NotificationViewModel = koinViewModel()
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHost = LocalSnackbarHost.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -43,17 +41,16 @@ fun NotificationScreen(
     viewModel.sideEffect.collectSideEffect {
         when (it) {
             NotificationSideEffect.NavigateToHome -> {
-                component.navigateToHomeScreen("알림 생성 완료")
+                component.navigateToHomeScreen()
             }
 
-            is NotificationSideEffect.ShowErrorMessage -> {
-                snackbarHostState.showSnackbar(it.message)
+            is NotificationSideEffect.ShowSnackbar -> {
+                snackbarHost.showSnackbar(it.message)
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             WSTopBar(
                 title = "",

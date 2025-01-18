@@ -53,7 +53,7 @@ class QuestionAddViewModel(
                 .map { it.trim() }
 
             if (questionList.isEmpty()) {
-                postSideEffect(QuestionAddSideEffect.ShowToast("질문 목록이 비어있어요."))
+                postSideEffect(QuestionAddSideEffect.ShowSnackbar("질문 목록이 비어있어요."))
                 return@launch
             }
 
@@ -61,10 +61,11 @@ class QuestionAddViewModel(
             repository.postVoteQuestions(questionList)
                 .onSuccess {
                     clearState()
+                    postSideEffect(QuestionAddSideEffect.ShowSnackbar("작성 완료"))
                     postSideEffect(QuestionAddSideEffect.NavigateToQuestionScreen)
                 }
                 .onFailure { exception ->
-                    postSideEffect(QuestionAddSideEffect.ShowToast("${exception.message} 문제가 발생했어요."))
+                    postSideEffect(QuestionAddSideEffect.ShowSnackbar("${exception.message} 문제가 발생했어요."))
                 }
                 .also {
                     reduce { copy(isLoading = false) }

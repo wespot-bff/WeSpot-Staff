@@ -16,14 +16,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
@@ -38,6 +34,7 @@ import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import wespotstaff.feature_vote.generated.resources.Res
@@ -49,7 +46,7 @@ fun QuestionScreen(
     component: QuestionComponent,
     viewModel: QuestionViewModel = koinViewModel(),
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHost = LocalSnackbarHost.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -57,17 +54,16 @@ fun QuestionScreen(
     viewModel.sideEffect.collectSideEffect {
         when (it) {
             is QuestionSideEffect.QuestionPostEvent -> {
-                snackbarHostState.showSnackbar(message = it.message)
+                snackbarHost.showSnackbar(message = it.message)
             }
 
             is QuestionSideEffect.QuestionLoadFailedEvent -> {
-                snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
+                snackbarHost.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
             }
         }
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             WSTopBar(
                 title = "질문 추가/수정",
@@ -161,12 +157,6 @@ fun QuestionScreen(
                 paddingValues = PaddingValues(),
                 content = { it() },
             )
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        component.toastMessage?.let {
-            snackbarHostState.showSnackbar(it)
         }
     }
 

@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -26,6 +24,7 @@ import com.wespot.staff.designsystem.component.WSDialogType
 import com.wespot.staff.designsystem.component.WSListItem
 import com.wespot.staff.designsystem.component.WSLoadingAnimation
 import com.wespot.staff.designsystem.component.WSTopBar
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +34,7 @@ fun ConfigurationScreen(
     viewModel: ConfigurationViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHost = LocalSnackbarHost.current
     var showEditDialog by remember { mutableStateOf(false) }
     var showBottomSheet by remember { mutableStateOf(false) }
 
@@ -46,11 +45,11 @@ fun ConfigurationScreen(
             }
 
             is ConfigurationSideEffect.ShowErrorToast -> {
-                snackbarHostState.showSnackbar(it.message)
+                snackbarHost.showSnackbar(it.message)
             }
 
             is ConfigurationSideEffect.ShowToast -> {
-                snackbarHostState.showSnackbar(it.message)
+                snackbarHost.showSnackbar(it.message)
             }
 
             ConfigurationSideEffect.ShowBottomSheet -> {
@@ -60,7 +59,6 @@ fun ConfigurationScreen(
     }
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             WSTopBar(
                 title = "컨피그 값 관리",

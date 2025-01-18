@@ -31,6 +31,7 @@ class ConfigurationAddViewModel(
         viewModelScope.launch {
             remoteConfigRepository.postRemoteConfigValue(remoteConfig = RemoteConfig(key = key, value = state.remoteConfigValue))
                 .onSuccess {
+                    postSideEffect(ConfigurationAddSideEffect.ShowErrorToast("등록 완료"))
                     postSideEffect(ConfigurationAddSideEffect.NavigateToHomeScreen)
                 }.onFailure {
                     postSideEffect(ConfigurationAddSideEffect.ShowErrorToast("알 수 없는 에러가 발생했습니다. ${it.message.toString()}"))

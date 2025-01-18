@@ -39,16 +39,20 @@ fun QuestionAddScreen(
     viewModel: QuestionAddViewModel,
     questionList: List<VoteQuestionContent>? = null,
     titleContent: @Composable () -> Unit,
-    showToast: suspend (String) -> Unit,
-    navigateToQuestionScreen: (String) -> Unit,
+    showSnackbar: (String) -> Unit,
+    navigateToQuestionScreen: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     viewModel.sideEffect.collectSideEffect {
         when (it) {
-            QuestionAddSideEffect.NavigateToQuestionScreen -> navigateToQuestionScreen("작성 완료")
+            QuestionAddSideEffect.NavigateToQuestionScreen -> {
+                navigateToQuestionScreen()
+            }
 
-            is QuestionAddSideEffect.ShowToast -> { showToast(it.message) }
+            is QuestionAddSideEffect.ShowSnackbar -> {
+                showSnackbar(it.message)
+            }
         }
     }
 

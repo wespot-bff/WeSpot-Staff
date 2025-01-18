@@ -3,13 +3,10 @@ package com.wespot.staff.vote.write.confirm
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.SnackbarHost
-import androidx.compose.material.SnackbarHostState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.unit.dp
@@ -17,6 +14,7 @@ import com.wespot.staff.common.extensions.clickableSingle
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.theme.StaticTypography
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
 import com.wespot.staff.vote.write.add.QuestionAddScreen
 import com.wespot.staff.vote.write.add.QuestionAddViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -27,11 +25,10 @@ fun QuestionConfirmScreen(
     component: QuestionConfirmComponent,
     questionAddViewModel: QuestionAddViewModel = koinViewModel(),
 ) {
-    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarHost = LocalSnackbarHost.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
-        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         topBar = {
             WSTopBar(
                 title = "",
@@ -57,7 +54,7 @@ fun QuestionConfirmScreen(
                         color = WeSpotThemeManager.colors.txtTitleColor,
                     )
                 },
-                showToast = { snackbarHostState.showSnackbar(it) },
+                showSnackbar = { snackbarHost.showSnackbar(it) },
                 navigateToQuestionScreen = component::navigateToQuestionScreen
             )
         }
