@@ -35,7 +35,7 @@ import com.wespot.staff.designsystem.component.WSTextField
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
-import com.wespot.staff.designsystem.util.LocalSnackbarHostState
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 import wespotstaff.feature_vote.generated.resources.Res
@@ -47,7 +47,7 @@ fun QuestionScreen(
     component: QuestionComponent,
     viewModel: QuestionViewModel = koinViewModel(),
 ) {
-    val snackbarHostState = LocalSnackbarHostState.current
+    val snackbarHost = LocalSnackbarHost.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -55,11 +55,11 @@ fun QuestionScreen(
     viewModel.sideEffect.collectSideEffect {
         when (it) {
             is QuestionSideEffect.QuestionPostEvent -> {
-                snackbarHostState.showSnackbar(message = it.message)
+                snackbarHost.showSnackbar(message = it.message)
             }
 
             is QuestionSideEffect.QuestionLoadFailedEvent -> {
-                snackbarHostState.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
+                snackbarHost.showSnackbar("질문 리스트를 불러오는데 실패하였습니다")
             }
         }
     }
@@ -163,7 +163,7 @@ fun QuestionScreen(
 
     LaunchedEffect(Unit) {
         component.toastMessage?.let {
-            snackbarHostState.showSnackbar(it)
+            snackbarHost.showSnackbar(it)
         }
     }
 

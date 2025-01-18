@@ -14,7 +14,7 @@ import com.wespot.staff.common.extensions.clickableSingle
 import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.theme.StaticTypography
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
-import com.wespot.staff.designsystem.util.LocalSnackbarHostState
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
 import com.wespot.staff.vote.write.add.QuestionAddScreen
 import com.wespot.staff.vote.write.add.QuestionAddViewModel
 import org.koin.compose.viewmodel.koinViewModel
@@ -25,7 +25,7 @@ fun QuestionConfirmScreen(
     component: QuestionConfirmComponent,
     questionAddViewModel: QuestionAddViewModel = koinViewModel(),
 ) {
-    val snackbarHostState = LocalSnackbarHostState.current
+    val snackbarHost = LocalSnackbarHost.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     Scaffold(
@@ -54,7 +54,7 @@ fun QuestionConfirmScreen(
                         color = WeSpotThemeManager.colors.txtTitleColor,
                     )
                 },
-                showToast = { snackbarHostState.showSnackbar(it) },
+                showToast = { snackbarHost.showSnackbar(it) },
                 navigateToQuestionScreen = component::navigateToQuestionScreen
             )
         }
