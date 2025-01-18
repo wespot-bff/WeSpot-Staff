@@ -54,7 +54,7 @@ fun QuestionConfirmScreen(
                         color = WeSpotThemeManager.colors.txtTitleColor,
                     )
                 },
-                showToast = { snackbarHost.showSnackbar(it) },
+                showSnackbar = { snackbarHost.showSnackbar(it) },
                 navigateToQuestionScreen = component::navigateToQuestionScreen
             )
         }
