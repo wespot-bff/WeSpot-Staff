@@ -5,8 +5,9 @@ import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.router.stack.StackNavigation
 import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.pop
+import com.arkivanov.decompose.router.stack.popWhile
+import com.arkivanov.decompose.router.stack.pushNew
 import com.arkivanov.decompose.value.Value
-import com.wespot.staff.common.extensions.navigate
 import com.wespot.staff.domain.vote.VoteQuestionContent
 import com.wespot.staff.vote.write.QuestionWriteComponent
 import com.wespot.staff.vote.home.VoteHomeComponent
@@ -19,8 +20,6 @@ interface VoteRootComponent {
     val stack: Value<ChildStack<*, VoteChild>>
 
     fun isBottomBarImpression(voteChild: VoteChild): Boolean
-
-    fun popBackStack()
 
     sealed class VoteChild {
         class VoteHomeScreen(val component: VoteHomeComponent) : VoteChild()
@@ -48,14 +47,10 @@ class DefaultVoteRootComponent(
     override fun isBottomBarImpression(voteChild: VoteChild): Boolean =
         voteChild is VoteChild.VoteHomeScreen
 
-    override fun popBackStack() {
-        navigation.pop()
-    }
-
     private fun createChild(config: VoteConfiguration, componentContext: ComponentContext): VoteChild =
         when (config) {
             is VoteConfiguration.VoteHome -> VoteChild.VoteHomeScreen(voteHomeComponent(componentContext))
-            is VoteConfiguration.Question -> VoteChild.QuestionScreen(questionComponent(componentContext, config))
+            is VoteConfiguration.Question -> VoteChild.QuestionScreen(questionComponent(componentContext))
             is VoteConfiguration.QuestionWrite -> VoteChild.QuestionWriteScreen(questionWriteComponent(componentContext))
             is VoteConfiguration.QuestionConfirm -> VoteChild.QuestionConfirmScreen(questionConfirmComponent(componentContext, config))
         }
@@ -64,31 +59,28 @@ class DefaultVoteRootComponent(
         VoteHomeComponent(
             componentContext = componentContext,
             navigateToQuestion = {
-                navigation.navigate(VoteConfiguration.Question())
+                navigation.pushNew(VoteConfiguration.Question)
             },
             navigateToQuestionWrite = {
-                navigation.navigate(VoteConfiguration.QuestionWrite)
+                navigation.pushNew(VoteConfiguration.QuestionWrite)
             }
         )
 
-    private fun questionComponent(
-        componentContext: ComponentContext,
-        config : VoteConfiguration.Question,
-    ): QuestionComponent =
-        QuestionComponent(componentContext = componentContext, popBackStack = ::popBackStack, toastMessage = config.toastMessage)
+    private fun questionComponent(componentContext: ComponentContext): QuestionComponent =
+        QuestionComponent(componentContext = componentContext, popBackStack = navigation::pop)
 
     private fun questionWriteComponent(componentContext: ComponentContext): QuestionWriteComponent =
         QuestionWriteComponent(
             componentContext = componentContext,
-            popBackStack = ::popBackStack,
+            popBackStack = navigation::pop,
             navigateToQuestionConfirm = {
-                navigation.navigate(
-                    VoteConfiguration.QuestionConfirm(
-                        it
-                    )
-                )
+                navigation.pushNew(VoteConfiguration.QuestionConfirm(it))
             },
-            navigateToQuestion = { navigation.navigate(VoteConfiguration.Question(it)) },
+            popUpToQuestion = {
+                navigation.popWhile { configuration ->
+                    (configuration is VoteConfiguration.Question).not()
+                }
+            },
         )
 
     private fun questionConfirmComponent(
@@ -98,8 +90,12 @@ class DefaultVoteRootComponent(
         QuestionConfirmComponent(
             componentContext = componentContext,
             questionList = config.questionList,
-            popBackStack = ::popBackStack,
-            navigateToQuestion = { navigation.navigate(VoteConfiguration.Question(it)) },
+            popBackStack = navigation::pop,
+            popUpToQuestion = {
+                navigation.popWhile { configuration ->
+                    (configuration is VoteConfiguration.Question).not()
+                }
+            },
         )
 
     @Serializable
@@ -108,7 +104,7 @@ class DefaultVoteRootComponent(
         data object VoteHome : VoteConfiguration
 
         @Serializable
-        data class Question(val toastMessage: String? = null) : VoteConfiguration
+        data object Question : VoteConfiguration
 
         @Serializable
         data object QuestionWrite : VoteConfiguration

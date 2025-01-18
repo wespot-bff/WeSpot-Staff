@@ -7,9 +7,9 @@ class QuestionConfirmComponent(
     componentContext: ComponentContext,
     val questionList: List<VoteQuestionContent>,
     val popBackStack: () -> Unit,
-    val navigateToQuestion: (String) -> Unit,
+    val popUpToQuestion: () -> Unit,
 ): ComponentContext by componentContext {
     fun navigateUp() = popBackStack()
 
-    fun navigateToQuestionScreen(message: String) = navigateToQuestion(message)
+    fun navigateToQuestionScreen() = popUpToQuestion()
 }
