@@ -38,8 +38,8 @@ class NotificationViewModel(
                     body = state.body,
                 )
             ).onSuccess {
-                postSideEffect(NotificationSideEffect.NavigateToHome)
                 postSideEffect(NotificationSideEffect.ShowSnackbar("알림 생성 완료"))
+                postSideEffect(NotificationSideEffect.NavigateToHome)
             }.onFailure { exception ->
                 postSideEffect(NotificationSideEffect.ShowSnackbar("${exception.message} 문제가 발생했어요."))
             }.also {
