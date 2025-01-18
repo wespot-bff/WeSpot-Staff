@@ -25,8 +25,7 @@ import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun BottomNavigationTab(
-    selectedNavigation:
-    RootConfiguration,
+    selectedNavigation: RootConfiguration,
     onNavigationSelected: (RootConfiguration) -> Unit,
     modifier: Modifier = Modifier,
 ) {
