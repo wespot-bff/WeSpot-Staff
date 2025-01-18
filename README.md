@@ -1,14 +1,36 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+## 🌕 WeSpotStaff - 어드민 서비스 
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+<div align="center">
+  <p align="center">
+    <img src="https://github.com/user-attachments/assets/9d7ec810-5702-4333-85ed-444c5f8c17d4", height="500" />
+    <img src="https://github.com/user-attachments/assets/25471221-36e0-4484-9d99-24e7ed0012b7", height="500" />
+  </p>
+</div>
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+</br></br>
 
+## 🌖 Tech Stack 
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+| Platform | KotlinMultiPlaform, ComposeMultiPlaform |
+|:---|:---|
+| Architecture | CleanArchitecture, MVI, MVVM |
+| Data | Ktor(Okhttp, Darwin), Kotlin Serialization, DataStore |
+| Presentation | Compose, Decompose |
+| Dependency Injection | Koin MultiPlaform |
+| Third Party | [Kermit](https://github.com/touchlab/Kermit), [Kotlin Firebase](https://github.com/GitLiveApp/firebase-kotlin-sdk), [Gradle BuildConfig](https://github.com/gmazzo/gradle-buildconfig-plugin) |
+
+## 🌗 Feature
+
+</br></br>
+
+## 🌘 Contributors 
+<table>
+  <tr>
+    <td align="center"><a href="http://github.com/jeongjaino"><img src="https://avatars.githubusercontent.com/u/77484719?v=4" width="300px;" alt=""/><br /><sub><b>JinHo Jeong</sub></a><br /><a href="https://github.com/YAPP-Github/24th-App-Team-1-Android/commits/main?author=jeongjaino" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/kpeel5839"><img src="https://avatars.githubusercontent.com/u/89840550?v=4" width="300px;" alt=""/><br /><sub><b>JaeYeon Kim</sub></a><br /><a href="https://github.com/YAPP-Github/24th-App-Team-1-BE/commits/main?author=kpeel5839" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><code>🍻제이콥🍻</td>
+    <td align="center"><code>🍑매튜🍑</td>
+  </tr>
+</table>
