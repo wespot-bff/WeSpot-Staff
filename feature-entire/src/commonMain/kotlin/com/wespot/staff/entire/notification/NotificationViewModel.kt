@@ -26,7 +26,7 @@ class NotificationViewModel(
     fun publishNotification() {
         viewModelScope.launch {
             if (state.title.isBlank() || state.body.isBlank()) {
-                postSideEffect(NotificationSideEffect.ShowErrorMessage("제목과 내용을 모두 작성해주세요."))
+                postSideEffect(NotificationSideEffect.ShowSnackbar("제목과 내용을 모두 작성해주세요."))
             }
 
             reduce {
@@ -39,8 +39,9 @@ class NotificationViewModel(
                 )
             ).onSuccess {
                 postSideEffect(NotificationSideEffect.NavigateToHome)
+                postSideEffect(NotificationSideEffect.ShowSnackbar("알림 생성 완료"))
             }.onFailure { exception ->
-                postSideEffect(NotificationSideEffect.ShowErrorMessage("${exception.message} 문제가 발생했어요."))
+                postSideEffect(NotificationSideEffect.ShowSnackbar("${exception.message} 문제가 발생했어요."))
             }.also {
                 reduce {
                     copy(isLoading = false)

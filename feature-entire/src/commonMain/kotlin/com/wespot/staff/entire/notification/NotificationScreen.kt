@@ -24,7 +24,7 @@ import com.wespot.staff.designsystem.component.WSTopBar
 import com.wespot.staff.designsystem.component.WsTextFieldType
 import com.wespot.staff.designsystem.theme.StaticTypography
 import com.wespot.staff.designsystem.theme.WeSpotThemeManager
-import com.wespot.staff.designsystem.util.LocalSnackbarHostState
+import com.wespot.staff.designsystem.util.snackbar.LocalSnackbarHost
 import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -33,7 +33,7 @@ fun NotificationScreen(
     component: NotificationComponent,
     viewModel: NotificationViewModel = koinViewModel()
 ) {
-    val snackbarHostState = LocalSnackbarHostState.current
+    val snackbarHost = LocalSnackbarHost.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
     val state by viewModel.uiState.collectAsStateWithLifecycle()
@@ -41,11 +41,11 @@ fun NotificationScreen(
     viewModel.sideEffect.collectSideEffect {
         when (it) {
             NotificationSideEffect.NavigateToHome -> {
-                component.navigateToHomeScreen("알림 생성 완료")
+                component.navigateToHomeScreen()
             }
 
-            is NotificationSideEffect.ShowErrorMessage -> {
-                snackbarHostState.showSnackbar(it.message)
+            is NotificationSideEffect.ShowSnackbar -> {
+                snackbarHost.showSnackbar(it.message)
             }
         }
     }
