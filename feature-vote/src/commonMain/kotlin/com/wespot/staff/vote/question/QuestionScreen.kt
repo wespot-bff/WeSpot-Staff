@@ -19,7 +19,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -158,12 +157,6 @@ fun QuestionScreen(
                 paddingValues = PaddingValues(),
                 content = { it() },
             )
-        }
-    }
-
-    LaunchedEffect(Unit) {
-        component.toastMessage?.let {
-            snackbarHost.showSnackbar(it)
         }
     }
 
