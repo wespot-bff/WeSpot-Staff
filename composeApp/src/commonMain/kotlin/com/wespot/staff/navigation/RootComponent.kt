@@ -3,7 +3,6 @@ package com.wespot.staff.navigation
 import com.arkivanov.decompose.router.stack.ChildStack
 import com.arkivanov.decompose.value.Value
 import com.wespot.staff.entire.navigation.EntireRootComponent
-import com.wespot.staff.report.navigation.ReportComponent
 import com.wespot.staff.vote.navigation.VoteRootComponent
 
 interface RootComponent {
@@ -17,7 +16,6 @@ interface RootComponent {
 
     sealed class RootChild {
         class VoteRoot(val component: VoteRootComponent) : RootChild()
-        class ReportRoot(val component: ReportComponent) : RootChild()
         class EntireRoot(val component: EntireRootComponent) : RootChild()
     }
 }

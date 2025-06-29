@@ -31,7 +31,6 @@ kotlin {
             implementation(projects.data)
             implementation(projects.featureEntire)
             implementation(projects.featureVote)
-            implementation(projects.featureReport)
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)

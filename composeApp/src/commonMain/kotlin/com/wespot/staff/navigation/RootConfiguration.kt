@@ -5,9 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface RootConfiguration {
     @Serializable
-    data object Message : RootConfiguration
-
-    @Serializable
     data object Vote : RootConfiguration
 
     @Serializable
