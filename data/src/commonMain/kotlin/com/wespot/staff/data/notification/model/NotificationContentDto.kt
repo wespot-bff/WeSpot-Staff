@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class NotificationContentDto(
     val title: String,
     val body: String,
-    val publishNotificationType: String = "PROFILE_UPDATE",
+    val publishNotificationType: String,
 )
