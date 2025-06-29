@@ -6,4 +6,5 @@ internal fun NotificationContent.toNotificationContentDto() =
     NotificationContentDto(
         title = this.title,
         body = this.body,
+        publishNotificationType = this.type.name,
     )
