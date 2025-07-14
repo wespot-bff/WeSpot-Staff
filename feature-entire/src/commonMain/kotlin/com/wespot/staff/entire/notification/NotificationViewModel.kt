@@ -64,10 +64,12 @@ class NotificationViewModel(
         viewModelScope.launch {
             if (state.title.isBlank() || state.body.isBlank()) {
                 postSideEffect(NotificationSideEffect.ShowSnackbar("제목과 내용을 모두 작성해주세요"))
+                return@launch
             }
 
             if (state.selectableNotificationTypes.isEmpty()) {
                 postSideEffect(NotificationSideEffect.ShowSnackbar("알림 타입을 선택하세요"))
+                return@launch
             }
 
             reduce {
