@@ -264,12 +264,12 @@ private fun NotificationTypeItem(
     Row(
         modifier = Modifier
             .clickableSingle(onClick = onClick)
-            .padding(horizontal = 12.dp),
+            .padding(12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = text,
-            style = StaticTypography().body3,
+            style = StaticTypography().body4,
             color = WeSpotThemeManager.colors.txtTitleColor,
         )
     }
