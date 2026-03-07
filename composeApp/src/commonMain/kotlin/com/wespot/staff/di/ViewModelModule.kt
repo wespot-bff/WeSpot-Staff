@@ -6,6 +6,7 @@ import com.wespot.staff.state.RootViewModel
 import com.wespot.staff.entire.configuration.ConfigurationViewModel
 import com.wespot.staff.entire.configuration.add.ConfigurationAddViewModel
 import com.wespot.staff.entire.notification.NotificationViewModel
+import com.wespot.staff.user.home.UserHomeViewModel
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
@@ -16,5 +17,6 @@ val viewModelModule: Module = module {
     viewModelOf(::ConfigurationViewModel)
     viewModelOf(::ConfigurationAddViewModel)
     viewModelOf(::NotificationViewModel)
+    viewModelOf(::UserHomeViewModel)
     viewModelOf(::RootViewModel)
 }

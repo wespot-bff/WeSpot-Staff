@@ -8,6 +8,9 @@ import com.wespot.staff.data.core.defaultKtorConfig
 import com.wespot.staff.data.notification.NotificationApiClient
 import com.wespot.staff.data.notification.DefaultNotificationApiClient
 import com.wespot.staff.data.notification.DefaultNotificationRepository
+import com.wespot.staff.data.user.DefaultUserRepository
+import com.wespot.staff.data.user.remote.DefaultUserApiClient
+import com.wespot.staff.data.user.remote.UserApiClient
 import com.wespot.staff.data.vote.DefaultVoteRepository
 import com.wespot.staff.data.vote.local.DefaultVoteDataStore
 import com.wespot.staff.data.vote.local.VoteDataStore
@@ -15,6 +18,7 @@ import com.wespot.staff.data.vote.remote.DefaultVoteApiClient
 import com.wespot.staff.data.vote.remote.VoteApiClient
 import com.wespot.staff.domain.config.RemoteConfigRepository
 import com.wespot.staff.domain.notification.NotificationRepository
+import com.wespot.staff.domain.user.UserRepository
 import com.wespot.staff.domain.vote.VoteRepository
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.remoteconfig.FirebaseRemoteConfig
@@ -60,4 +64,6 @@ public actual val dataModule: Module = module {
     singleOf(::DefaultRemoteConfigRepository) bind RemoteConfigRepository::class
     singleOf(::DefaultNotificationApiClient) bind NotificationApiClient::class
     singleOf(::DefaultNotificationRepository) bind NotificationRepository::class
+    singleOf(::DefaultUserApiClient) bind UserApiClient::class
+    singleOf(::DefaultUserRepository) bind UserRepository::class
 }
