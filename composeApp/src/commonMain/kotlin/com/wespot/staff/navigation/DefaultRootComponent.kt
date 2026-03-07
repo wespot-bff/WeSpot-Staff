@@ -8,9 +8,10 @@ import com.arkivanov.decompose.router.stack.childStack
 import com.arkivanov.decompose.router.stack.popTo
 import com.arkivanov.decompose.value.Value
 import com.wespot.staff.entire.navigation.DefaultEntireRootComponent
-import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.entire.navigation.EntireRootComponent
-import com.wespot.staff.report.navigation.ReportComponent
+import com.wespot.staff.navigation.RootComponent.RootChild
+import com.wespot.staff.user.navigation.DefaultUserRootComponent
+import com.wespot.staff.user.navigation.UserRootComponent
 import com.wespot.staff.vote.navigation.DefaultVoteRootComponent
 import com.wespot.staff.vote.navigation.VoteRootComponent
 
@@ -33,15 +34,15 @@ class DefaultRootComponent(
     private fun createChild(config: RootConfiguration, componentContext: ComponentContext): RootChild =
         when (config) {
             is RootConfiguration.Vote -> RootChild.VoteRoot(voteComponent(componentContext))
-            is RootConfiguration.Message -> RootChild.ReportRoot(messageComponent(componentContext))
+            is RootConfiguration.User -> RootChild.UserRoot(userComponent(componentContext))
             is RootConfiguration.Entire -> RootChild.EntireRoot(entireComponent(componentContext))
         }
 
     private fun voteComponent(componentContext: ComponentContext): VoteRootComponent =
         DefaultVoteRootComponent(componentContext = componentContext)
 
-    private fun messageComponent(componentContext: ComponentContext): ReportComponent =
-        ReportComponent(componentContext = componentContext)
+    private fun userComponent(componentContext: ComponentContext): UserRootComponent =
+        DefaultUserRootComponent(componentContext = componentContext)
 
     private fun entireComponent(componentContext: ComponentContext): EntireRootComponent =
         DefaultEntireRootComponent(componentContext = componentContext)

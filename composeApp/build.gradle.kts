@@ -30,8 +30,8 @@ kotlin {
             implementation(projects.domain)
             implementation(projects.data)
             implementation(projects.featureEntire)
+            implementation(projects.featureUser)
             implementation(projects.featureVote)
-            implementation(projects.featureReport)
 
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
@@ -54,8 +54,8 @@ android {
 
     defaultConfig {
         applicationId = "com.wespot.staff"
-        versionCode = 7
-        versionName = "1.2.1"
+        versionCode = 10
+        versionName = "1.4.0"
     }
     packaging {
         resources {

@@ -5,10 +5,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed interface RootConfiguration {
     @Serializable
-    data object Message : RootConfiguration
+    data object Vote : RootConfiguration
 
     @Serializable
-    data object Vote : RootConfiguration
+    data object User : RootConfiguration
 
     @Serializable
     data object Entire : RootConfiguration

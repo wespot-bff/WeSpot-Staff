@@ -2,5 +2,6 @@
 <resources>
     <string name="message">쪽지</string>
     <string name="vote">비밀 투표</string>
+    <string name="user">유저</string>
     <string name="entire">전체</string>
 </resources>
