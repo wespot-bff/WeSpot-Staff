@@ -11,7 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Scaffold
@@ -86,10 +86,10 @@ fun UserHomeScreen(
                 verticalArrangement = Arrangement.spacedBy(0.dp),
                 modifier = Modifier.weight(1f),
             ) {
-                items(
+                itemsIndexed(
                     items = state.users,
-                    key = { it.id }
-                ) { user ->
+                    key = { _, item -> item.id }
+                ) { index, user ->
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -97,7 +97,7 @@ fun UserHomeScreen(
                             .padding(vertical = 12.dp),
                     ) {
                         Text(
-                            text = "[${user.schoolName}] ${user.name}",
+                            text = "${index + 1}. [${user.schoolName}] ${user.name}",
                             style = StaticTypography().body4,
                             color = WeSpotThemeManager.colors.txtTitleColor,
                         )
