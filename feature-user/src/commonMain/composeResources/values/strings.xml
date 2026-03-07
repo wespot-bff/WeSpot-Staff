@@ -2,6 +2,9 @@
 <resources>
     <string name="user_management_title">유저 관리</string>
     <string name="user_delete">유저 삭제</string>
+    <string name="user_info_school">학교</string>
+    <string name="user_info_grade">학년</string>
+    <string name="user_info_class">반</string>
     <string name="user_list_load_failed">유저 목록을 불러오는데 실패했습니다</string>
     <string name="user_delete_success">유저가 삭제되었습니다</string>
     <string name="user_delete_failed">유저 삭제에 실패했습니다</string>

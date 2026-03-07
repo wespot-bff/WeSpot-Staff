@@ -3,9 +3,13 @@ package com.wespot.staff.user.home
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +34,9 @@ import wespotstaff.feature_user.generated.resources.Res
 import wespotstaff.feature_user.generated.resources.user_delete
 import wespotstaff.feature_user.generated.resources.user_delete_failed
 import wespotstaff.feature_user.generated.resources.user_delete_success
+import wespotstaff.feature_user.generated.resources.user_info_class
+import wespotstaff.feature_user.generated.resources.user_info_grade
+import wespotstaff.feature_user.generated.resources.user_info_school
 import wespotstaff.feature_user.generated.resources.user_list_load_failed
 import wespotstaff.feature_user.generated.resources.user_management_title
 
@@ -111,19 +118,69 @@ fun UserHomeScreen(
         }
     }
 
-    if (state.showBottomSheet) {
+    if (state.showBottomSheet && state.selectedUser != null) {
+        val user = state.selectedUser!!
+
         WSBottomSheet(
             closeSheet = viewModel::onDismissBottomSheet,
         ) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Column(modifier = Modifier.padding(horizontal = 20.dp)) {
+                Text(
+                    text = user.name,
+                    style = StaticTypography().header2,
+                    color = WeSpotThemeManager.colors.txtTitleColor,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = user.email,
+                    style = StaticTypography().body6,
+                    color = WeSpotThemeManager.colors.txtSubColor,
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                UserInfoRow(stringResource(Res.string.user_info_school), user.schoolName)
+                UserInfoRow(stringResource(Res.string.user_info_grade), "${user.grade}")
+                UserInfoRow(stringResource(Res.string.user_info_class), "${user.classNumber}")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            HorizontalDivider(
+                modifier = Modifier.fillMaxWidth(),
+                thickness = 1.dp,
+                color = WeSpotThemeManager.colors.cardBackgroundColor,
+            )
+
             BottomSheetText(
                 text = stringResource(Res.string.user_delete),
                 showDivider = false,
                 onClick = viewModel::deleteUser,
             )
+
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 
     if (state.isLoading) {
         WSLoadingAnimation()
+    }
+}
+
+@Composable
+private fun UserInfoRow(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+        Text(
+            text = value,
+            style = StaticTypography().body4,
+            color = WeSpotThemeManager.colors.txtTitleColor,
+        )
+        Spacer(modifier = Modifier.width(4.dp))
+        Text(
+            text = label,
+            style = StaticTypography().body6,
+            color = WeSpotThemeManager.colors.txtSubColor,
+        )
     }
 }
