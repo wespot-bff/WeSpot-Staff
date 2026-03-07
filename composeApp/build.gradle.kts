@@ -30,6 +30,7 @@ kotlin {
             implementation(projects.domain)
             implementation(projects.data)
             implementation(projects.featureEntire)
+            implementation(projects.featureUser)
             implementation(projects.featureVote)
 
             implementation(libs.androidx.lifecycle.viewmodel)

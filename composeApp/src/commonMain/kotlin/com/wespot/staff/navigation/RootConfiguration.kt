@@ -8,5 +8,8 @@ sealed interface RootConfiguration {
     data object Vote : RootConfiguration
 
     @Serializable
+    data object User : RootConfiguration
+
+    @Serializable
     data object Entire : RootConfiguration
 }

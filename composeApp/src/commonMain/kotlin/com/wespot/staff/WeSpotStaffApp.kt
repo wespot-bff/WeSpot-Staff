@@ -33,6 +33,7 @@ import com.wespot.staff.navigation.RootComponent
 import com.wespot.staff.navigation.RootComponent.RootChild
 import com.wespot.staff.state.RootSideEffect
 import com.wespot.staff.state.RootViewModel
+import com.wespot.staff.user.navigation.UserNavigation
 import com.wespot.staff.vote.navigation.VoteNavigation
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -95,6 +96,10 @@ fun BottomNavigationBar(component: RootComponent, child: RootChild) {
                 val voteChild by targetChild.component.stack.subscribeAsState()
                 targetChild.component.isBottomBarImpression(voteChild.active.instance)
             }
+            is RootChild.UserRoot -> {
+                val userChild by targetChild.component.stack.subscribeAsState()
+                targetChild.component.isBottomBarImpression(userChild.active.instance)
+            }
             is RootChild.EntireRoot -> {
                 val entireChild by targetChild.component.stack.subscribeAsState()
                 targetChild.component.isBottomBarImpression(entireChild.active.instance)
@@ -122,6 +127,7 @@ fun AppNavigation(childStack: ChildStack<*, RootChild>) {
     ) {
         when (val child = it.instance) {
             is RootChild.VoteRoot -> VoteNavigation(component = child.component)
+            is RootChild.UserRoot -> UserNavigation(component = child.component)
             is RootChild.EntireRoot -> EntireNavigation(component = child.component)
         }
     }
